@@ -11,7 +11,6 @@ import {
 	VersioningType,
 } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
-import { Transport } from '@nestjs/microservices';
 import {
 	ExpressAdapter,
 	type NestExpressApplication,
@@ -28,7 +27,6 @@ import sortKeys from 'sort-keys';
 import { LanguageInterceptor } from './adapters/interceptors/language-interceptor.service';
 import { TranslationInterceptor } from './adapters/interceptors/translation-interceptor.service';
 import { AppModule } from './app.module';
-import { PACKAGE_PATH, RPC_PACKAGE_NAME } from './common/constants';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { GrpcExceptionFilter } from './common/filters/grpc-exception.filter';
 import { setupSwagger } from './setup-swagger';

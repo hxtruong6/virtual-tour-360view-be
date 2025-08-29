@@ -96,3 +96,5 @@ src/metadata.ts
 gc*.json
 
 count-line-code.js
+
+/src/generated/prisma

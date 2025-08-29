@@ -1,0 +1,557 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== ENUMS =====
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  CONTENT_CREATOR
+  VIEWER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+
+enum TourStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  UNDER_REVIEW
+}
+
+enum TourDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum HotspotType {
+  NAVIGATION
+  INFO
+  INTERACTIVE
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+}
+
+enum MediaStatus {
+  UPLOADING
+  PROCESSING
+  READY
+  FAILED
+  ARCHIVED
+}
+
+enum AnalyticsEventType {
+  TOUR_VIEW
+  SCENE_VIEW
+  HOTSPOT_CLICK
+  TOUR_SHARE
+  TOUR_BOOKMARK
+  SESSION_START
+  SESSION_END
+}
+
+// ===== CORE ENTITIES =====
+
+model User {
+  id         String     @id @default(cuid())
+  email      String     @unique
+  username   String?    @unique
+  first_name String?    @map("first_name")
+  last_name  String?    @map("last_name")
+  avatar     String?
+  role       UserRole   @default(VIEWER)
+  status     UserStatus @default(PENDING_VERIFICATION)
+  language   String     @default("en")
+  timezone   String     @default("UTC")
+
+  // Authentication
+  hashed_password           String?   @map("hashed_password")
+  email_verified_at         DateTime? @map("email_verified_at")
+  last_login_at             DateTime? @map("last_login_at")
+  password_reset_token      String?   @map("password_reset_token")
+  password_reset_expires_at DateTime? @map("password_reset_expires_at")
+
+  // Audit fields
+  created_at DateTime  @default(now()) @map("created_at")
+  updated_at DateTime  @updatedAt @map("updated_at")
+  deleted_at DateTime? @map("deleted_at")
+
+  // Relationships
+  created_tours        VirtualTour[]    @relation("TourCreator")
+  updated_tours        VirtualTour[]    @relation("TourUpdater")
+  user_sessions        UserSession[]
+  analytics_events     AnalyticsEvent[]
+  tour_bookmarks       TourBookmark[]
+  tour_ratings         TourRating[]
+  api_keys             ApiKey[]
+  uploaded_media_files MediaFile[]
+
+  @@index([email])
+  @@index([role])
+  @@index([status])
+  @@index([created_at])
+  @@map("users")
+}
+
+model VirtualTour {
+  id            String          @id @default(cuid())
+  title         String
+  description   String?
+  location      String?
+  slug          String          @unique
+  status        TourStatus      @default(DRAFT)
+  difficulty    TourDifficulty? @default(BEGINNER)
+  category      String?
+  tags          String[]
+  thumbnail_url String?         @map("thumbnail_url")
+
+  // SEO and metadata
+  meta_title       String?  @map("meta_title")
+  meta_description String?  @map("meta_description")
+  meta_keywords    String[] @map("meta_keywords")
+
+  // Tour settings
+  allow_public_access Boolean @default(true) @map("allow_public_access")
+  allow_embedding     Boolean @default(true) @map("allow_embedding")
+  autoplay_enabled    Boolean @default(false) @map("autoplay_enabled")
+  autoplay_speed      Int?    @default(2) @map("autoplay_speed") // seconds per rotation
+
+  // Statistics
+  view_count     Int    @default(0) @map("view_count")
+  share_count    Int    @default(0) @map("share_count")
+  bookmark_count Int    @default(0) @map("bookmark_count")
+  average_rating Float? @default(0) @map("average_rating")
+  total_ratings  Int    @default(0) @map("total_ratings")
+
+  // Computed metadata
+  total_scenes       Int  @default(0) @map("total_scenes")
+  total_hotspots     Int  @default(0) @map("total_hotspots")
+  estimated_duration Int? @map("estimated_duration") // in minutes
+
+  // Audit fields
+  created_at   DateTime  @default(now()) @map("created_at")
+  updated_at   DateTime  @updatedAt @map("updated_at")
+  published_at DateTime? @map("published_at")
+  deleted_at   DateTime? @map("deleted_at")
+
+  // Foreign keys
+  created_by_id String  @map("created_by_id")
+  updated_by_id String? @map("updated_by_id")
+
+  // Relationships
+  created_by       User              @relation("TourCreator", fields: [created_by_id], references: [id])
+  updated_by       User?             @relation("TourUpdater", fields: [updated_by_id], references: [id])
+  scenes           Scene[]
+  translations     TourTranslation[]
+  bookmarks        TourBookmark[]
+  ratings          TourRating[]
+  analytics_events AnalyticsEvent[]
+  embeds           TourEmbed[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([category])
+  @@index([created_by_id])
+  @@index([created_at])
+  @@index([published_at])
+  @@index([tags])
+  @@map("virtual_tours")
+}
+
+model Scene {
+  id            String  @id @default(cuid())
+  title         String
+  description   String?
+  order         Int
+  panorama_url  String  @map("panorama_url")
+  thumbnail_url String? @map("thumbnail_url")
+
+  // Scene positioning (for map integration)
+  map_position_x Float? @map("map_position_x")
+  map_position_y Float? @map("map_position_y")
+
+  // Scene settings
+  initial_view_angle Float? @default(0) @map("initial_view_angle") // degrees
+  max_zoom           Float? @default(3) @map("max_zoom")
+  min_zoom           Float? @default(0.5) @map("min_zoom")
+
+  // Audit fields
+  created_at DateTime  @default(now()) @map("created_at")
+  updated_at DateTime  @updatedAt @map("updated_at")
+  deleted_at DateTime? @map("deleted_at")
+
+  // Foreign keys
+  tour_id String @map("tour_id")
+
+  // Relationships
+  tour             VirtualTour        @relation(fields: [tour_id], references: [id], onDelete: Cascade)
+  hotspots         Hotspot[]
+  hotspot_targets  Hotspot[]          @relation("HotspotTarget")
+  translations     SceneTranslation[]
+  media_files      SceneMedia[]
+  analytics_events AnalyticsEvent[]
+
+  @@unique([tour_id, order])
+  @@index([tour_id])
+  @@index([order])
+  @@map("scenes")
+}
+
+model Hotspot {
+  id          String      @id @default(cuid())
+  type        HotspotType
+  title       String
+  description String?
+
+  // 3D positioning
+  position_x Float @map("position_x")
+  position_y Float @map("position_y")
+  position_z Float @map("position_z")
+
+  // Visual settings
+  icon_url   String? @map("icon_url")
+  icon_color String? @default("#ffffff") @map("icon_color")
+  icon_size  Float?  @default(1.0) @map("icon_size")
+
+  // Content for info hotspots
+  content Json? // Flexible content structure
+
+  // Navigation settings
+  target_scene_id String? @map("target_scene_id")
+
+  // Animation settings
+  animation_type  String? @default("pulse") @map("animation_type")
+  animation_speed Float?  @default(1.0) @map("animation_speed")
+
+  // Audit fields
+  created_at DateTime  @default(now()) @map("created_at")
+  updated_at DateTime  @updatedAt @map("updated_at")
+  deleted_at DateTime? @map("deleted_at")
+
+  // Foreign keys
+  scene_id String @map("scene_id")
+
+  // Relationships
+  scene            Scene                @relation(fields: [scene_id], references: [id], onDelete: Cascade)
+  target_scene     Scene?               @relation("HotspotTarget", fields: [target_scene_id], references: [id])
+  translations     HotspotTranslation[]
+  media_files      HotspotMedia[]
+  analytics_events AnalyticsEvent[]
+
+  @@index([scene_id])
+  @@index([type])
+  @@index([target_scene_id])
+  @@map("hotspots")
+}
+
+// ===== MEDIA MANAGEMENT =====
+
+model MediaFile {
+  id            String      @id @default(cuid())
+  original_name String      @map("original_name")
+  file_name     String      @unique @map("file_name")
+  file_path     String      @map("file_path")
+  file_size     Int         @map("file_size")
+  mime_type     String      @map("mime_type")
+  media_type    MediaType   @map("media_type")
+  status        MediaStatus @default(UPLOADING)
+
+  // Image/Video specific
+  width    Int?
+  height   Int?
+  duration Float? // for videos/audio in seconds
+
+  // Processing metadata
+  processing_log  String? @map("processing_log")
+  thumbnail_path  String? @map("thumbnail_path")
+  compressed_path String? @map("compressed_path")
+
+  // Storage metadata
+  storage_provider String? @default("local") @map("storage_provider")
+  external_url     String? @map("external_url")
+
+  // Audit fields
+  created_at DateTime  @default(now()) @map("created_at")
+  updated_at DateTime  @updatedAt @map("updated_at")
+  deleted_at DateTime? @map("deleted_at")
+
+  // Foreign keys
+  uploaded_by_id String? @map("uploaded_by_id")
+
+  // Relationships
+  uploaded_by   User?          @relation(fields: [uploaded_by_id], references: [id])
+  scene_media   SceneMedia[]
+  hotspot_media HotspotMedia[]
+
+  @@index([file_name])
+  @@index([media_type])
+  @@index([status])
+  @@index([uploaded_by_id])
+  @@map("media_files")
+}
+
+model SceneMedia {
+  id            String @id @default(cuid())
+  scene_id      String @map("scene_id")
+  media_file_id String @map("media_file_id")
+  media_type    String @map("media_type") // 'panorama', 'thumbnail', 'background_audio'
+  order         Int?   @default(0)
+
+  scene      Scene     @relation(fields: [scene_id], references: [id], onDelete: Cascade)
+  media_file MediaFile @relation(fields: [media_file_id], references: [id], onDelete: Cascade)
+
+  @@unique([scene_id, media_file_id])
+  @@index([scene_id])
+  @@index([media_file_id])
+  @@map("scene_media")
+}
+
+model HotspotMedia {
+  id            String @id @default(cuid())
+  hotspot_id    String @map("hotspot_id")
+  media_file_id String @map("media_file_id")
+  media_type    String @map("media_type") // 'icon', 'content_image', 'content_video'
+  order         Int?   @default(0)
+
+  hotspot    Hotspot   @relation(fields: [hotspot_id], references: [id], onDelete: Cascade)
+  media_file MediaFile @relation(fields: [media_file_id], references: [id], onDelete: Cascade)
+
+  @@unique([hotspot_id, media_file_id])
+  @@index([hotspot_id])
+  @@index([media_file_id])
+  @@map("hotspot_media")
+}
+
+// ===== INTERNATIONALIZATION =====
+
+model TourTranslation {
+  id               String  @id @default(cuid())
+  tour_id          String  @map("tour_id")
+  language         String
+  title            String
+  description      String?
+  meta_title       String? @map("meta_title")
+  meta_description String? @map("meta_description")
+
+  tour VirtualTour @relation(fields: [tour_id], references: [id], onDelete: Cascade)
+
+  @@unique([tour_id, language])
+  @@index([tour_id])
+  @@index([language])
+  @@map("tour_translations")
+}
+
+model SceneTranslation {
+  id          String  @id @default(cuid())
+  scene_id    String  @map("scene_id")
+  language    String
+  title       String
+  description String?
+
+  scene Scene @relation(fields: [scene_id], references: [id], onDelete: Cascade)
+
+  @@unique([scene_id, language])
+  @@index([scene_id])
+  @@index([language])
+  @@map("scene_translations")
+}
+
+model HotspotTranslation {
+  id          String  @id @default(cuid())
+  hotspot_id  String  @map("hotspot_id")
+  language    String
+  title       String
+  description String?
+  content     Json?
+
+  hotspot Hotspot @relation(fields: [hotspot_id], references: [id], onDelete: Cascade)
+
+  @@unique([hotspot_id, language])
+  @@index([hotspot_id])
+  @@index([language])
+  @@map("hotspot_translations")
+}
+
+// ===== ANALYTICS & TRACKING =====
+
+model UserSession {
+  id            String  @id @default(cuid())
+  session_token String  @unique @map("session_token")
+  user_id       String? @map("user_id")
+  ip_address    String? @map("ip_address")
+  user_agent    String? @map("user_agent")
+  device_type   String? @map("device_type") // 'desktop', 'mobile', 'tablet'
+  browser       String?
+  os            String?
+  country       String?
+  city          String?
+
+  started_at       DateTime  @default(now()) @map("started_at")
+  ended_at         DateTime? @map("ended_at")
+  last_activity_at DateTime  @default(now()) @map("last_activity_at")
+
+  user             User?            @relation(fields: [user_id], references: [id])
+  analytics_events AnalyticsEvent[]
+
+  @@index([session_token])
+  @@index([user_id])
+  @@index([started_at])
+  @@map("user_sessions")
+}
+
+model AnalyticsEvent {
+  id         String             @id @default(cuid())
+  event_type AnalyticsEventType @map("event_type")
+  session_id String?            @map("session_id")
+  user_id    String?            @map("user_id")
+  tour_id    String?            @map("tour_id")
+  scene_id   String?            @map("scene_id")
+  hotspot_id String?            @map("hotspot_id")
+
+  // Event metadata
+  event_data Json?    @map("event_data")
+  duration   Float? // in seconds
+  timestamp  DateTime @default(now())
+
+  // Geographic data
+  ip_address String? @map("ip_address")
+  country    String?
+  city       String?
+
+  session UserSession? @relation(fields: [session_id], references: [id])
+  user    User?        @relation(fields: [user_id], references: [id])
+  tour    VirtualTour? @relation(fields: [tour_id], references: [id])
+  scene   Scene?       @relation(fields: [scene_id], references: [id])
+  hotspot Hotspot?     @relation(fields: [hotspot_id], references: [id])
+
+  @@index([event_type])
+  @@index([timestamp])
+  @@index([session_id])
+  @@index([user_id])
+  @@index([tour_id])
+  @@index([scene_id])
+  @@index([hotspot_id])
+  @@map("analytics_events")
+}
+
+// ===== USER ENGAGEMENT =====
+
+model TourBookmark {
+  id         String   @id @default(cuid())
+  user_id    String   @map("user_id")
+  tour_id    String   @map("tour_id")
+  created_at DateTime @default(now()) @map("created_at")
+
+  user User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  tour VirtualTour @relation(fields: [tour_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, tour_id])
+  @@index([user_id])
+  @@index([tour_id])
+  @@map("tour_bookmarks")
+}
+
+model TourRating {
+  id         String   @id @default(cuid())
+  user_id    String   @map("user_id")
+  tour_id    String   @map("tour_id")
+  rating     Int // 1-5 stars
+  review     String?
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  user User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  tour VirtualTour @relation(fields: [tour_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, tour_id])
+  @@index([user_id])
+  @@index([tour_id])
+  @@index([rating])
+  @@map("tour_ratings")
+}
+
+// ===== API & EMBEDDING =====
+
+model ApiKey {
+  id       String @id @default(cuid())
+  name     String
+  key_hash String @unique @map("key_hash")
+  user_id  String @map("user_id")
+
+  // Permissions
+  allow_read      Boolean @default(true) @map("allow_read")
+  allow_write     Boolean @default(false) @map("allow_write")
+  allow_analytics Boolean @default(false) @map("allow_analytics")
+
+  // Limits
+  requests_per_day Int?     @default(1000) @map("requests_per_day")
+  requests_count   Int      @default(0) @map("requests_count")
+  last_reset_at    DateTime @default(now()) @map("last_reset_at")
+
+  // Status
+  is_active    Boolean   @default(true) @map("is_active")
+  expires_at   DateTime? @map("expires_at")
+  last_used_at DateTime? @map("last_used_at")
+
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([key_hash])
+  @@index([user_id])
+  @@index([is_active])
+  @@map("api_keys")
+}
+
+model TourEmbed {
+  id          String  @id @default(cuid())
+  tour_id     String  @map("tour_id")
+  embed_token String  @unique @map("embed_token")
+  domain      String? // Allowed domain for embedding
+
+  // Embed settings
+  width         String? @default("100%")
+  height        String? @default("500px")
+  show_controls Boolean @default(true) @map("show_controls")
+  show_branding Boolean @default(true) @map("show_branding")
+  autoplay      Boolean @default(false)
+
+  // Statistics
+  embed_views    Int       @default(0) @map("embed_views")
+  last_access_at DateTime? @map("last_access_at")
+
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  tour VirtualTour @relation(fields: [tour_id], references: [id], onDelete: Cascade)
+
+  @@index([embed_token])
+  @@index([tour_id])
+  @@index([domain])
+  @@map("tour_embeds")
+}
