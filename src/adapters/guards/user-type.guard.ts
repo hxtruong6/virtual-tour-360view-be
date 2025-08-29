@@ -10,14 +10,14 @@ import {
 import { Reflector } from '@nestjs/core';
 import _ from 'lodash';
 
-import { type EUserType } from '../../common/constants';
+import { UserRole } from '../../generated/prisma';
 
 @Injectable()
 export class UserTypeGuard implements CanActivate {
 	constructor(private readonly reflector: Reflector) {}
 
 	canActivate(context: ExecutionContext): boolean {
-		const userTypes = this.reflector.get<EUserType[]>(
+		const userTypes = this.reflector.get<UserRole[]>(
 			'userTypes',
 			context.getHandler(),
 		);
@@ -35,8 +35,10 @@ export class UserTypeGuard implements CanActivate {
 			throw new UnauthorizedException('User not found');
 		}
 
-		if (!userTypes.includes(user.userType)) {
-			throw new ForbiddenException(`User type ${user.userType} not allowed`);
+		console.info('xxxx user', user);
+
+		if (!userTypes.includes(user.role)) {
+			throw new ForbiddenException(`User type ${user.role} not allowed`);
 		}
 
 		return true;

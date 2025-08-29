@@ -8,7 +8,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import _ from 'lodash';
 
-import { TUser } from '../../core/entities/user.entity';
+import { TUser } from '../../core/entities/user-old.entity';
 import { PERMISSIONS_KEY } from '../../decorators/permissions.decorator';
 import { AuthService } from '../../modules/auth/auth.service';
 

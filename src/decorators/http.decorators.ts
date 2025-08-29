@@ -10,36 +10,30 @@ import { type Type } from '@nestjs/common/interfaces';
 import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { AuthGuard } from '../adapters/guards/auth.guard';
-import { RolesGuard } from '../adapters/guards/roles.guard';
-import { UserTypeGuard } from '../adapters/guards/user-type.guard';
 import { AuthUserInterceptor } from '../adapters/interceptors/auth-user-interceptor.service';
-import { type EAdminRoleType, type EUserType } from '../common/constants';
-import { Permissions } from './permissions.decorator';
 import { PublicRoute } from './public-route.decorator';
-import { Roles } from './roles.decorator';
-import { UserTypes } from './user-type.decorator';
 
 export function Auth({
-	userTypes = [],
-	adminRoles = [],
-	permissions = [],
+	// userTypes = [],
+	// adminRoles = [],
+	// permissions = [],
 	options,
 }: {
-	userTypes?: EUserType[];
-	adminRoles?: EAdminRoleType[];
-	permissions?: string[];
+	// userTypes?: EUserType[];
+	// adminRoles?: EAdminRoleType[];
+	// permissions?: string[];
 	options?: Partial<{ public: boolean }>;
-}): MethodDecorator {
+} = {}): MethodDecorator {
 	const isPublicRoute = options?.public;
 
 	return applyDecorators(
-		UserTypes(userTypes), // Get userTypes from decorator
-		Roles(adminRoles), // Get roles from decorator
-		Permissions(permissions), // Get permissions from decorator
+		// UserTypes(userTypes), // Get userTypes from decorator
+		// Roles(adminRoles), // Get roles from decorator
+		// Permissions(permissions), // Get permissions from decorator
 		UseGuards(
 			AuthGuard({ public: isPublicRoute }),
-			UserTypeGuard,
-			...(adminRoles.length > 0 ? [RolesGuard] : []),
+			// UserTypeGuard,
+			// ...(adminRoles.length > 0 ? [RolesGuard] : []),
 			// ...(permissions.length > 0 ? [PermissionsGuard] : []),
 		), // Apply guards
 		ApiBearerAuth(), // Apply bearer auth

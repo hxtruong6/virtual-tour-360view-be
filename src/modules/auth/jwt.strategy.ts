@@ -2,14 +2,10 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import {
-	type EAdminRoleType,
-	EUserType,
-	TokenType,
-} from '../../common/constants';
-import { IDataServices } from '../../core/abstract';
-import { TAdmin } from '../../core/entities/admin.entity';
-import { TUser } from '../../core/entities/user.entity';
+import { EUserType, TokenType } from '../../common/constants';
+import { AuthenUser } from '../../core/entities';
+import { User, UserRole, UserStatus } from '../../generated/prisma';
+import { PrismaService } from '../../prisma/prisma.service';
 import { ApiConfigService } from '../../shared/services/api-config.service';
 
 @Injectable()
@@ -18,7 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 	constructor(
 		configService: ApiConfigService,
-		private readonly dataServices: IDataServices,
+		private readonly prisma: PrismaService,
 	) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -29,34 +25,39 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 	// eslint-disable-next-line @typescript-eslint/require-await
 	async validate(args: {
-		userId: Uuid;
-		role: EAdminRoleType;
+		userId: string;
+		username: string;
 		type: TokenType;
 		userType: EUserType;
-	}): Promise<TUser | TAdmin> {
+	}): Promise<AuthenUser> {
 		console.info('[JwtStrategy] validate args', args);
 
 		if (args.type !== TokenType.ACCESS_TOKEN) {
-			throw new UnauthorizedException();
+			throw new UnauthorizedException('Invalid token type');
 		}
 
-		let user: TUser | TAdmin | undefined;
+		let user: User | null;
 
-		if (args.userType === EUserType.USER) {
-			user = await this.dataServices.users.getById(args.userId);
-		} else if (args.userType === EUserType.ADMIN) {
-			user = await this.dataServices.admins.getById(args.userId);
+		if (args.userType === EUserType.ADMIN) {
+			// Use Prisma to get admin user
+			user = await this.prisma.user.findFirst({
+				where: {
+					id: args.userId,
+					role: {
+						in: [UserRole.SUPER_ADMIN, UserRole.ADMIN],
+					},
+					status: UserStatus.ACTIVE,
+					deletedAt: null,
+				},
+			});
 		} else {
-			throw new UnauthorizedException();
+			throw new UnauthorizedException('Only admin users are supported');
 		}
 
-		if (!user?.id) {
-			throw new UnauthorizedException();
+		if (!user) {
+			throw new UnauthorizedException('User not found or inactive');
 		}
 
-		return {
-			...user,
-			userType: args.userType,
-		} as unknown as TUser | TAdmin;
+		return new AuthenUser(user);
 	}
 }

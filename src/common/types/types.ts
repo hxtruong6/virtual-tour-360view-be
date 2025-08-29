@@ -1,7 +1,7 @@
 import { type ColumnType, type Generated } from 'kysely';
 import { type Socket } from 'socket.io';
 
-import { type TUser } from '../../core/entities/user.entity';
+import { type TUser } from '../../core/entities/user-old.entity';
 import { type EOrder } from '../constants/order';
 
 export type StripGenerated<T> = {

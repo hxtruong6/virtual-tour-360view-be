@@ -4,9 +4,10 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 
-import { ADMIN_USER_ID } from '../../../common/constants';
+import { ADMIN_USER_ID, EOrder } from '../../../common/constants';
 import { PageMetaDto } from '../../../common/dto/page-meta.dto';
 import { generateSlug } from '../../../common/utils';
+import { AuthenUser } from '../../../core/entities';
 import { TourStatus } from '../../../generated/prisma';
 import { PrismaService } from '../../../prisma/prisma.service';
 import {
@@ -85,9 +86,9 @@ export class VirtualToursUseCase {
 		}
 
 		// Build orderBy
-		const orderBy: any = {};
+		const orderBy: Record<string, EOrder> = {};
 		const sortBy = 'createdAt'; // Default sort field
-		const sortOrder = 'desc'; // Default sort order
+		const sortOrder = EOrder.DESC; // Default sort order
 		orderBy[sortBy] = sortOrder;
 
 		// Execute query
@@ -147,6 +148,7 @@ export class VirtualToursUseCase {
 
 	async createVirtualTour(
 		createDto: CreateVirtualTourDto,
+		user: AuthenUser,
 	): Promise<VirtualTourDto> {
 		const slug = generateSlug(createDto.title);
 
@@ -188,8 +190,8 @@ export class VirtualToursUseCase {
 				totalScenes: 0,
 				totalHotspots: 0,
 				estimatedDuration: createDto.estimatedDuration,
-				createdById: ADMIN_USER_ID,
-				updatedById: ADMIN_USER_ID,
+				createdById: user.id,
+				updatedById: user.id,
 			},
 		});
 
@@ -199,6 +201,7 @@ export class VirtualToursUseCase {
 	async updateVirtualTour(
 		id: string,
 		updateDto: UpdateVirtualTourDto,
+		userId?: string,
 	): Promise<VirtualTourDto> {
 		// Check if tour exists
 		const existingTour = await this.prisma.virtualTour.findFirst({
@@ -239,7 +242,7 @@ export class VirtualToursUseCase {
 		const updateData: any = {
 			...updateDto,
 			slug: newSlug,
-			updatedById: ADMIN_USER_ID,
+			updatedById: userId || ADMIN_USER_ID,
 		};
 
 		// Handle status-specific updates
@@ -326,7 +329,10 @@ export class VirtualToursUseCase {
 		});
 	}
 
-	async publishVirtualTour(id: string): Promise<VirtualTourDto> {
+	async publishVirtualTour(
+		id: string,
+		userId?: string,
+	): Promise<VirtualTourDto> {
 		// Check if tour exists
 		const existingTour = await this.prisma.virtualTour.findFirst({
 			where: {
@@ -355,14 +361,17 @@ export class VirtualToursUseCase {
 			data: {
 				status: TourStatus.PUBLISHED,
 				publishedAt: new Date(),
-				updatedById: ADMIN_USER_ID,
+				updatedById: userId || ADMIN_USER_ID,
 			},
 		});
 
 		return new VirtualTourDto(updatedTour);
 	}
 
-	async archiveVirtualTour(id: string): Promise<VirtualTourDto> {
+	async archiveVirtualTour(
+		id: string,
+		userId?: string,
+	): Promise<VirtualTourDto> {
 		// Check if tour exists
 		const existingTour = await this.prisma.virtualTour.findFirst({
 			where: {
@@ -379,14 +388,17 @@ export class VirtualToursUseCase {
 			where: { id },
 			data: {
 				status: TourStatus.ARCHIVED,
-				updatedById: ADMIN_USER_ID,
+				updatedById: userId || ADMIN_USER_ID,
 			},
 		});
 
 		return new VirtualTourDto(updatedTour);
 	}
 
-	async duplicateVirtualTour(id: string): Promise<VirtualTourDto> {
+	async duplicateVirtualTour(
+		id: string,
+		userId?: string,
+	): Promise<VirtualTourDto> {
 		// Check if original tour exists
 		const originalTour = await this.prisma.virtualTour.findFirst({
 			where: {
@@ -429,8 +441,8 @@ export class VirtualToursUseCase {
 				totalHotspots: 0,
 				estimatedDuration: originalTour.estimatedDuration,
 				publishedAt: null,
-				createdById: ADMIN_USER_ID,
-				updatedById: ADMIN_USER_ID,
+				createdById: userId || ADMIN_USER_ID,
+				updatedById: userId || ADMIN_USER_ID,
 			},
 		});
 

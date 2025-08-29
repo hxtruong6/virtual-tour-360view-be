@@ -1,27 +1,20 @@
-import { Global, Module, forwardRef } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { GrpcAuthGuard } from '../../adapters/guards/grpc-auth.guard';
-import { GrpcAuthUserInterceptor } from '../../adapters/interceptors/grpc-auth-user-interceptor.service';
-import { DataServicesModule } from '../../infrastructure/data-services/sql/data-services.module';
+import { PrismaModule } from '../../prisma/prisma.module';
 import { ApiConfigService } from '../../shared/services/api-config.service';
 import { SharedModule } from '../../shared/shared.module';
-import { CwInventoryUseCase } from '../cwgame/cw-inventory.use-case';
-import { GameConfigUseCase } from '../cwgame/game-configs/game-config.use-case';
-import { UserModule } from '../user/user.module';
-import { UserUseCases } from '../user/user.use-case';
 import { AdminAuthController } from './admin-auth.controller';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { GrpcJwtStrategy } from './grpc-jwt.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { PublicStrategy } from './public.strategy';
 
 @Global()
 @Module({
 	imports: [
-		forwardRef(() => UserModule),
+		// forwardRef(() => UserModule),
 		PassportModule.register({ defaultStrategy: 'jwt' }),
 		JwtModule.registerAsync({
 			useFactory: (configService: ApiConfigService) => ({
@@ -42,22 +35,22 @@ import { PublicStrategy } from './public.strategy';
 			}),
 			inject: [ApiConfigService],
 		}),
-		DataServicesModule,
+		PrismaModule,
 		SharedModule,
 		// NotificationModule,
 	],
 	controllers: [AuthController, AdminAuthController],
 	providers: [
-		UserUseCases,
+		// UserUseCases,
 		AuthService,
 		JwtStrategy,
-		GrpcJwtStrategy,
+		// GrpcJwtStrategy,
 		PublicStrategy,
-		GrpcAuthGuard,
-		GrpcAuthUserInterceptor,
-		CwInventoryUseCase,
-		GameConfigUseCase,
+		// GrpcAuthGuard,
+		// GrpcAuthUserInterceptor,
+		// CwInventoryUseCase,
+		// GameConfigUseCase,
 	],
-	exports: [JwtModule, AuthService, GrpcAuthGuard, GrpcAuthUserInterceptor],
+	exports: [JwtModule, AuthService],
 })
 export class AuthModule {}

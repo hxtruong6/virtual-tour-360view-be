@@ -1,9 +1,9 @@
-import { type EAdminRoleType } from '../../../common/constants';
 import {
 	NumberField,
 	StringField,
 	StringFieldOptional,
 } from '../../../decorators';
+import { UserRole } from '../../../generated/prisma';
 
 export class AdminLoginResponseDto {
 	@StringField()
@@ -19,10 +19,10 @@ export class AdminLoginResponseDto {
 	readonly displayName?: string;
 
 	@StringField()
-	readonly role!: EAdminRoleType;
+	readonly role!: UserRole;
 
-	@StringField()
-	readonly permissions!: string[];
+	@StringFieldOptional()
+	readonly permissions?: string;
 
 	@StringField()
 	readonly accessToken!: string;
@@ -38,8 +38,8 @@ export class AdminLoginResponseDto {
 		username: string;
 		email?: string;
 		displayName?: string;
-		role: EAdminRoleType;
-		permissions: string[];
+		role: UserRole;
+		permissions?: string;
 		accessToken: string;
 		refreshToken: string;
 		expiresIn: number;

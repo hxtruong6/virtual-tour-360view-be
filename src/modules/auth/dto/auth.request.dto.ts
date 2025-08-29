@@ -62,7 +62,7 @@ export class RequestUserRegisterDto {
 }
 
 export class RequestUserLoginDto {
-	@StringFieldOptional({ minLength: 3 })
+	@StringFieldOptional({ minLength: 3, toLowerCase: true })
 	readonly username?: string;
 
 	@EmailFieldOptional({ toLowerCase: true })
@@ -70,9 +70,6 @@ export class RequestUserLoginDto {
 
 	@PasswordField({ minLength: 4 })
 	readonly password!: string;
-
-	@StringFieldOptional()
-	readonly walletAddress?: string;
 }
 
 export class RequestWalletAddressLoginDto {

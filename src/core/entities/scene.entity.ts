@@ -1,54 +1,54 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { Scene } from '../../../../generated/prisma';
+import { Scene } from '../../generated/prisma';
 
 export class SceneEntity implements Scene {
 	@ApiProperty()
-	id: string;
+	id!: string;
 
 	@ApiProperty()
-	title: string;
+	title!: string;
 
 	@ApiProperty({ required: false, nullable: true })
-	description: string | null;
+	description!: string | null;
 
 	@ApiProperty()
-	order: number;
+	order!: number;
 
 	@ApiProperty()
-	panorama_url: string;
+	panoramaUrl!: string;
 
 	@ApiProperty({ required: false, nullable: true })
-	thumbnail_url: string | null;
+	thumbnailUrl!: string | null;
 
 	// Scene positioning (for map integration)
 	@ApiProperty({ required: false, nullable: true })
-	map_position_x: number | null;
+	mapPositionX!: number | null;
 
 	@ApiProperty({ required: false, nullable: true })
-	map_position_y: number | null;
+	mapPositionY!: number | null;
 
 	// Scene settings
 	@ApiProperty({ required: false, nullable: true })
-	initial_view_angle: number | null;
+	initialViewAngle!: number | null;
 
 	@ApiProperty({ required: false, nullable: true })
-	max_zoom: number | null;
+	maxZoom!: number | null;
 
 	@ApiProperty({ required: false, nullable: true })
-	min_zoom: number | null;
+	minZoom!: number | null;
 
 	// Audit fields
 	@ApiProperty()
-	created_at: Date;
+	createdAt!: Date;
 
 	@ApiProperty()
-	updated_at: Date;
+	updatedAt!: Date;
 
 	@ApiProperty({ required: false, nullable: true })
-	deleted_at: Date | null;
+	deletedAt!: Date | null;
 
 	// Foreign keys
 	@ApiProperty()
-	tour_id: string;
+	tourId!: string;
 }

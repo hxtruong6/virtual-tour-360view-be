@@ -4,109 +4,105 @@ import {
 	TourDifficulty,
 	TourStatus,
 	VirtualTour,
-} from '../../../../generated/prisma';
+} from '../../generated/prisma';
 
 export class VirtualTourEntity implements VirtualTour {
 	@ApiProperty()
-	id: string;
+	id!: string;
 
 	@ApiProperty()
-	title: string;
+	title!: string;
 
 	@ApiProperty({ required: false, nullable: true })
-	description: string | null;
+	description!: string | null;
 
 	@ApiProperty({ required: false, nullable: true })
-	location: string | null;
+	location!: string | null;
 
 	@ApiProperty()
-	slug: string;
+	slug!: string;
 
 	@ApiProperty({ enum: TourStatus })
-	status: TourStatus;
+	status!: TourStatus;
 
 	@ApiProperty({ enum: TourDifficulty, required: false, nullable: true })
-	difficulty: TourDifficulty | null;
+	difficulty!: TourDifficulty | null;
 
 	@ApiProperty({ required: false, nullable: true })
-	category: string | null;
+	category!: string | null;
 
 	@ApiProperty({ type: [String] })
-	tags: string[];
+	tags!: string[];
 
 	@ApiProperty({ required: false, nullable: true })
-	thumbnailUrl: string | null;
+	thumbnailUrl!: string | null;
 
 	// SEO and metadata
 	@ApiProperty({ required: false, nullable: true })
-	metaTitle: string | null;
+	metaTitle!: string | null;
 
 	@ApiProperty({ required: false, nullable: true })
-	metaDescription: string | null;
+	metaDescription!: string | null;
 
 	@ApiProperty({ type: [String] })
-	metaKeywords: string[];
+	metaKeywords!: string[];
 
 	// Tour settings
 	@ApiProperty()
-	allowPublicAccess: boolean;
+	allowPublicAccess!: boolean;
 
 	@ApiProperty()
-	allowEmbedding: boolean;
+	allowEmbedding!: boolean;
 
 	@ApiProperty()
-	autoplayEnabled: boolean;
+	autoplayEnabled!: boolean;
 
 	@ApiProperty({ required: false, nullable: true })
-	autoplaySpeed: number | null;
+	autoplaySpeed!: number | null;
 
 	// Statistics
 	@ApiProperty()
-	viewCount: number;
+	viewCount!: number;
 
 	@ApiProperty()
-	shareCount: number;
+	shareCount!: number;
 
 	@ApiProperty()
-	bookmarkCount: number;
+	bookmarkCount!: number;
 
 	@ApiProperty({ required: false, nullable: true })
-	averageRating: number | null;
+	averageRating!: number | null;
 
 	@ApiProperty()
-	total_ratings: number;
+	totalRatings!: number;
 
 	// Computed metadata
 	@ApiProperty()
-	total_scenes: number;
+	totalScenes!: number;
 
 	@ApiProperty()
-	total_hotspots: number;
+	totalHotspots!: number;
 
 	@ApiProperty({ required: false, nullable: true })
-	estimated_duration: number | null;
+	estimatedDuration!: number | null;
 
 	// Audit fields
 	@ApiProperty()
-	created_at: Date;
+	createdAt!: Date;
 
 	@ApiProperty()
-	updated_at: Date;
+	updatedAt!: Date;
 
 	@ApiProperty({ required: false, nullable: true })
-	publishedAt: Date | null;
+	publishedAt!: Date | null;
 
 	@ApiProperty({ required: false, nullable: true })
-	deleted_at: Date | null;
+	deletedAt!: Date | null;
 
 	// Foreign keys
 	@ApiProperty()
-	createdById: string;
+	createdById!: string;
 
 	@ApiProperty({ required: false, nullable: true })
-	updatedById: string | null;
-
-	constructor(data: VirtualTour) {
-		Object.assign(this, data);
-	}
+	updatedById!: string | null;
 }

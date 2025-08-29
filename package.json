@@ -17,6 +17,8 @@
 		"migrations:dev": "NODE_ENV=development node dist/infrastructure/database/runMigrations.js",
 		"seed:dev": "NODE_ENV=development npx kysely seed:run",
 		"seed:prod": "NODE_ENV=production npx kysely seed:run",
+		"db:seed": "ts-node prisma/seed.ts",
+		"db:seed:prod": "NODE_ENV=production ts-node prisma/seed.ts",
 		"new": "hygen new",
 		"watch:dev": "ts-node-dev src/main.ts",
 		"debug:dev": "cross-env TS_NODE_CACHE=false ts-node-dev --inspect --ignore '/^src/.*\\.spec\\.ts$/' src/main.ts",
@@ -197,6 +199,9 @@
 		},
 		"coverageDirectory": "../coverage",
 		"testEnvironment": "node"
+	},
+	"prisma": {
+		"seed": "npx tsx prisma/seed.ts"
 	},
 	"engines": {
 		"node": ">=20.0.0"

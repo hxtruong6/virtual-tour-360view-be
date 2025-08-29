@@ -1,39 +1,39 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { Hotspot, HotspotType, Prisma } from '../../../../generated/prisma';
+import { Hotspot, HotspotType, Prisma } from '../../generated/prisma';
 
 export class HotspotEntity implements Hotspot {
 	@ApiProperty()
-	id: string;
+	id!: string;
 
 	@ApiProperty({ enum: HotspotType })
-	type: HotspotType;
+	type!: HotspotType;
 
 	@ApiProperty()
-	title: string;
+	title!: string;
 
 	@ApiProperty({ required: false, nullable: true })
-	description: string | null;
+	description!: string | null;
 
 	// 3D positioning
 	@ApiProperty()
-	position_x: number;
+	positionX!: number;
 
 	@ApiProperty()
-	position_y: number;
+	positionY!: number;
 
 	@ApiProperty()
-	position_z: number;
+	positionZ!: number;
 
 	// Visual settings
 	@ApiProperty({ required: false, nullable: true })
-	icon_url: string | null;
+	iconUrl!: string | null;
 
 	@ApiProperty({ required: false, nullable: true })
-	icon_color: string | null;
+	iconColor!: string | null;
 
 	@ApiProperty({ required: false, nullable: true })
-	icon_size: number | null;
+	iconSize!: number | null;
 
 	// Content for info hotspots
 	@ApiProperty({
@@ -44,30 +44,30 @@ export class HotspotEntity implements Hotspot {
 			image: 'https://cdn.example.com/kitchen_detail.jpg',
 		},
 	})
-	content: Prisma.JsonValue | null;
+	content!: Prisma.JsonValue | null;
 
 	// Navigation settings
 	@ApiProperty({ required: false, nullable: true })
-	target_scene_id: string | null;
+	targetSceneId!: string | null;
 
 	// Animation settings
 	@ApiProperty({ required: false, nullable: true })
-	animation_type: string | null;
+	animationType!: string | null;
 
 	@ApiProperty({ required: false, nullable: true })
-	animation_speed: number | null;
+	animationSpeed!: number | null;
 
 	// Audit fields
 	@ApiProperty()
-	created_at: Date;
+	createdAt!: Date;
 
 	@ApiProperty()
-	updated_at: Date;
+	updatedAt!: Date;
 
 	@ApiProperty({ required: false, nullable: true })
-	deleted_at: Date | null;
+	deletedAt!: Date | null;
 
 	// Foreign keys
 	@ApiProperty()
-	scene_id: string;
+	sceneId!: string;
 }

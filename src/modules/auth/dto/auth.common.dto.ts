@@ -1,7 +1,5 @@
 import { Expose, plainToInstance } from 'class-transformer';
 
-import { TAdmin } from '../../../core/entities/admin.entity';
-import { TUser } from '../../../core/entities/user.entity';
 import {
 	DateFieldOptional,
 	EmailFieldOptional,
@@ -11,6 +9,7 @@ import {
 	StringFieldOptional,
 	UUIDField,
 } from '../../../decorators';
+import { User } from '../../../generated/prisma';
 
 export class ResponseUserDto {
 	@Expose()
@@ -73,7 +72,7 @@ export class ResponseUserDto {
 	@JsonFieldOptional()
 	readonly metadata!: Record<string, unknown>;
 
-	constructor(user: TUser) {
+	constructor(user: User) {
 		const plainUser = plainToInstance(ResponseUserDto, user, {
 			excludeExtraneousValues: true,
 		});
@@ -83,27 +82,31 @@ export class ResponseUserDto {
 
 export class ResponseAdminDto {
 	@UUIDField()
-	readonly id!: Uuid;
+	readonly id!: string;
 
 	@StringField({ minLength: 3 })
 	readonly username!: string;
 
 	@StringFieldOptional()
-	readonly email!: string;
+	readonly email?: string;
 
 	@StringFieldOptional()
-	readonly displayName!: string;
+	readonly displayName?: string;
 
-	@StringField({ minLength: 3 })
-	readonly role!: string;
+	@StringFieldOptional()
+	readonly role?: string;
 
-	@StringField({ minLength: 3 })
-	readonly permissions!: string;
+	@StringFieldOptional()
+	readonly permissions?: string;
 
-	constructor(admin: TAdmin) {
-		const plainAdmin = plainToInstance(ResponseAdminDto, admin, {
-			excludeExtraneousValues: true,
-		});
-		Object.assign(this, plainAdmin);
+	constructor(admin: User) {
+		// Map Prisma User to ResponseAdminDto
+		this.id = admin.id;
+		this.username = admin.username || '';
+		this.email = admin.email || undefined;
+		this.displayName =
+			`${admin.firstName || ''} ${admin.lastName || ''}`.trim() || undefined;
+		this.role = admin.role;
+		this.permissions = '[]'; // Add permissions logic if needed
 	}
 }

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 
 import { ContextProvider } from '../../common/providers';
-import { type TUser } from '../../core/entities/user.entity';
+import { type TUser } from '../../core/entities/user-old.entity';
 
 @Injectable()
 export class AuthUserInterceptor implements NestInterceptor {

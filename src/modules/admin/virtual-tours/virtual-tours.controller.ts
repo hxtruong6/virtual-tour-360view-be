@@ -13,6 +13,9 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { EVersion } from '../../../common/constants';
+import { AuthenUser } from '../../../core/entities';
+import { AuthUser } from '../../../decorators/auth-user.decorator';
+import { Auth } from '../../../decorators/http.decorators';
 import {
 	CreateVirtualTourDto,
 	UpdateVirtualTourDto,
@@ -32,6 +35,7 @@ export class VirtualToursController {
 
 	@Get()
 	@HttpCode(HttpStatus.OK)
+	@Auth()
 	@ApiOperation({
 		summary: 'Get all virtual tours',
 		description:
@@ -48,6 +52,7 @@ export class VirtualToursController {
 
 	@Get(':id')
 	@HttpCode(HttpStatus.OK)
+	@Auth()
 	@ApiOperation({
 		summary: 'Get virtual tour by ID',
 		description: 'Admin API to get virtual tour details by ID',
@@ -67,6 +72,7 @@ export class VirtualToursController {
 
 	@Post()
 	@HttpCode(HttpStatus.CREATED)
+	@Auth()
 	@ApiOperation({
 		summary: 'Create virtual tour',
 		description: 'Admin API to create a new virtual tour',
@@ -80,12 +86,16 @@ export class VirtualToursController {
 		status: HttpStatus.BAD_REQUEST,
 		description: 'Invalid input data',
 	})
-	async createVirtualTour(@Body() createDto: CreateVirtualTourDto) {
-		return this.virtualToursUseCase.createVirtualTour(createDto);
+	async createVirtualTour(
+		@Body() createDto: CreateVirtualTourDto,
+		@AuthUser() user: AuthenUser,
+	) {
+		return this.virtualToursUseCase.createVirtualTour(createDto, user);
 	}
 
 	@Put(':id')
 	@HttpCode(HttpStatus.OK)
+	@Auth()
 	@ApiOperation({
 		summary: 'Update virtual tour',
 		description: 'Admin API to update an existing virtual tour',
@@ -106,12 +116,14 @@ export class VirtualToursController {
 	async updateVirtualTour(
 		@Param('id') id: string,
 		@Body() updateDto: UpdateVirtualTourDto,
+		// @AuthUser() user?: TUser,
 	) {
 		return this.virtualToursUseCase.updateVirtualTour(id, updateDto);
 	}
 
 	@Delete(':id')
 	@HttpCode(HttpStatus.NO_CONTENT)
+	@Auth()
 	@ApiOperation({
 		summary: 'Delete virtual tour',
 		description: 'Admin API to delete a virtual tour (soft delete)',
@@ -130,6 +142,7 @@ export class VirtualToursController {
 
 	@Post(':id/publish')
 	@HttpCode(HttpStatus.OK)
+	@Auth()
 	@ApiOperation({
 		summary: 'Publish virtual tour',
 		description: 'Admin API to publish a virtual tour',
@@ -153,6 +166,7 @@ export class VirtualToursController {
 
 	@Post(':id/archive')
 	@HttpCode(HttpStatus.OK)
+	@Auth()
 	@ApiOperation({
 		summary: 'Archive virtual tour',
 		description: 'Admin API to archive a virtual tour',
@@ -172,6 +186,7 @@ export class VirtualToursController {
 
 	@Post(':id/duplicate')
 	@HttpCode(HttpStatus.CREATED)
+	@Auth()
 	@ApiOperation({
 		summary: 'Duplicate virtual tour',
 		description: 'Admin API to create a copy of an existing virtual tour',
@@ -185,7 +200,10 @@ export class VirtualToursController {
 		status: HttpStatus.NOT_FOUND,
 		description: 'Virtual tour not found',
 	})
-	async duplicateVirtualTour(@Param('id') id: string) {
+	async duplicateVirtualTour(
+		@Param('id') id: string,
+		@AuthUser() user: AuthenUser,
+	) {
 		return this.virtualToursUseCase.duplicateVirtualTour(id);
 	}
 }

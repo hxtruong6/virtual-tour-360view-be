@@ -19,6 +19,7 @@ import { API_HEADERS } from './common/constants';
 import { getEnvFilePath } from './common/utils';
 import { RequestContextMiddleware } from './core/middleware/request-context.middleware';
 import { AdminModule } from './modules/admin/admin.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ApiConfigService } from './shared/services/api-config.service';
@@ -77,6 +78,7 @@ import { SharedModule } from './shared/shared.module';
 		HealthCheckerModule,
 		PrismaModule,
 
+		AuthModule,
 		AdminModule,
 	],
 	providers: [{ provide: APP_GUARD, useClass: ThrottlerBehindProxyGuard }],

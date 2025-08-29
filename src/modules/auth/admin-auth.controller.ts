@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-import { EAdminRoleType, EUserType } from '../../common/constants';
-import { TAdmin } from '../../core/entities/admin.entity';
+import { EVersion } from '../../common/constants';
+import { AuthenUser } from '../../core/entities';
 import { Auth } from '../../decorators';
 import { AuthUser } from '../../decorators/auth-user.decorator';
 import { AuthService } from './auth.service';
@@ -19,7 +19,7 @@ import { AdminLoginResponseDto } from './dto/admin-auth.response.dto';
 import { ResponseAdminDto } from './dto/auth.common.dto';
 import { LoginPayloadDto } from './dto/login-payload.dto';
 
-@Controller({ path: '/admin/auth', version: '1' })
+@Controller({ path: '/admin/auth', version: EVersion.V1 })
 @ApiTags('admin/auth')
 export class AdminAuthController {
 	private readonly logger = new Logger(AdminAuthController.name);
@@ -40,15 +40,14 @@ export class AdminAuthController {
 
 	@Get('me')
 	@HttpCode(HttpStatus.OK)
-	@Auth({
-		userTypes: [EUserType.ADMIN],
-		adminRoles: [EAdminRoleType.DEVELOPER, EAdminRoleType.SUPER_ADMIN],
-	})
+	@Auth()
 	@ApiOkResponse({
 		type: ResponseAdminDto,
 		description: 'Current admin profile information',
 	})
-	async getAdminProfile(@AuthUser() admin: TAdmin): Promise<ResponseAdminDto> {
+	async getAdminProfile(
+		@AuthUser() admin: AuthenUser,
+	): Promise<ResponseAdminDto> {
 		return this.authService.getAdminProfile(admin.id);
 	}
 }

@@ -40,8 +40,8 @@ import {
 } from '../../core/entities/permission.entity';
 import { type SkillTemplateTable } from '../../core/entities/skill-template.entity';
 import { type UserInventoryTable } from '../../core/entities/user-inventory.entity';
+import { type UserTable } from '../../core/entities/user-old.entity';
 import { type UserSkillTable } from '../../core/entities/user-skill.entity';
-import { type UserTable } from '../../core/entities/user.entity';
 
 export interface Tables {
 	admins: AdminTable;

@@ -12,6 +12,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["app"]
 }
 
 // ===== ENUMS =====
@@ -21,6 +22,8 @@ enum UserRole {
   ADMIN
   CONTENT_CREATOR
   VIEWER
+
+  @@schema("app")
 }
 
 enum UserStatus {
@@ -28,6 +31,8 @@ enum UserStatus {
   INACTIVE
   SUSPENDED
   PENDING_VERIFICATION
+
+  @@schema("app")
 }
 
 enum TourStatus {
@@ -35,18 +40,24 @@ enum TourStatus {
   PUBLISHED
   ARCHIVED
   UNDER_REVIEW
+
+  @@schema("app")
 }
 
 enum TourDifficulty {
   BEGINNER
   INTERMEDIATE
   ADVANCED
+
+  @@schema("app")
 }
 
 enum HotspotType {
   NAVIGATION
   INFO
   INTERACTIVE
+
+  @@schema("app")
 }
 
 enum MediaType {
@@ -54,6 +65,8 @@ enum MediaType {
   VIDEO
   AUDIO
   DOCUMENT
+
+  @@schema("app")
 }
 
 enum MediaStatus {
@@ -62,6 +75,8 @@ enum MediaStatus {
   READY
   FAILED
   ARCHIVED
+
+  @@schema("app")
 }
 
 enum AnalyticsEventType {
@@ -72,6 +87,8 @@ enum AnalyticsEventType {
   TOUR_BOOKMARK
   SESSION_START
   SESSION_END
+
+  @@schema("app")
 }
 
 // ===== CORE ENTITIES =====
@@ -115,6 +132,7 @@ model User {
   @@index([status])
   @@index([createdAt])
   @@map("users")
+  @@schema("app")
 }
 
 model VirtualTour {
@@ -159,11 +177,11 @@ model VirtualTour {
   deletedAt   DateTime? @map("deleted_at")
 
   // Foreign keys
-  createdById String  @map("created_by_id")
+  createdById String? @map("created_by_id")
   updatedById String? @map("updated_by_id")
 
   // Relationships
-  createdBy       User              @relation("TourCreator", fields: [createdById], references: [id])
+  createdBy       User?             @relation("TourCreator", fields: [createdById], references: [id])
   updatedBy       User?             @relation("TourUpdater", fields: [updatedById], references: [id])
   scenes          Scene[]
   translations    TourTranslation[]
@@ -180,6 +198,7 @@ model VirtualTour {
   @@index([publishedAt])
   @@index([tags])
   @@map("virtual_tours")
+  @@schema("app")
 }
 
 model Scene {
@@ -219,6 +238,7 @@ model Scene {
   @@index([tourId])
   @@index([order])
   @@map("scenes")
+  @@schema("app")
 }
 
 model Hotspot {
@@ -266,6 +286,7 @@ model Hotspot {
   @@index([type])
   @@index([targetSceneId])
   @@map("hotspots")
+  @@schema("app")
 }
 
 // ===== MEDIA MANAGEMENT =====
@@ -312,6 +333,7 @@ model MediaFile {
   @@index([status])
   @@index([uploadedById])
   @@map("media_files")
+  @@schema("app")
 }
 
 model SceneMedia {
@@ -328,6 +350,7 @@ model SceneMedia {
   @@index([sceneId])
   @@index([mediaFileId])
   @@map("scene_media")
+  @@schema("app")
 }
 
 model HotspotMedia {
@@ -344,6 +367,7 @@ model HotspotMedia {
   @@index([hotspotId])
   @@index([mediaFileId])
   @@map("hotspot_media")
+  @@schema("app")
 }
 
 // ===== INTERNATIONALIZATION =====
@@ -363,6 +387,7 @@ model TourTranslation {
   @@index([tourId])
   @@index([language])
   @@map("tour_translations")
+  @@schema("app")
 }
 
 model SceneTranslation {
@@ -378,6 +403,7 @@ model SceneTranslation {
   @@index([sceneId])
   @@index([language])
   @@map("scene_translations")
+  @@schema("app")
 }
 
 model HotspotTranslation {
@@ -394,6 +420,7 @@ model HotspotTranslation {
   @@index([hotspotId])
   @@index([language])
   @@map("hotspot_translations")
+  @@schema("app")
 }
 
 // ===== ANALYTICS & TRACKING =====
@@ -421,6 +448,7 @@ model UserSession {
   @@index([userId])
   @@index([startedAt])
   @@map("user_sessions")
+  @@schema("app")
 }
 
 model AnalyticsEvent {
@@ -456,6 +484,7 @@ model AnalyticsEvent {
   @@index([sceneId])
   @@index([hotspotId])
   @@map("analytics_events")
+  @@schema("app")
 }
 
 // ===== USER ENGAGEMENT =====
@@ -473,6 +502,7 @@ model TourBookmark {
   @@index([userId])
   @@index([tourId])
   @@map("tour_bookmarks")
+  @@schema("app")
 }
 
 model TourRating {
@@ -492,6 +522,7 @@ model TourRating {
   @@index([tourId])
   @@index([rating])
   @@map("tour_ratings")
+  @@schema("app")
 }
 
 // ===== API & EMBEDDING =====
@@ -526,6 +557,7 @@ model ApiKey {
   @@index([userId])
   @@index([isActive])
   @@map("api_keys")
+  @@schema("app")
 }
 
 model TourEmbed {
@@ -554,4 +586,5 @@ model TourEmbed {
   @@index([tourId])
   @@index([domain])
   @@map("tour_embeds")
+  @@schema("app")
 }
