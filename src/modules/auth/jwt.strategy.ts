@@ -30,8 +30,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		type: TokenType;
 		userType: EUserType;
 	}): Promise<AuthenUser> {
-		console.info('[JwtStrategy] validate args', args);
-
 		if (args.type !== TokenType.ACCESS_TOKEN) {
 			throw new UnauthorizedException('Invalid token type');
 		}

@@ -175,7 +175,10 @@ export function StringField(
 
 	if (options.default) {
 		decorators.push(
-			Transform(({ value }) => value as string, { toClassOnly: true }),
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+			Transform(({ value }) => value ?? (options.default as string), {
+				toClassOnly: true,
+			}),
 		);
 	}
 

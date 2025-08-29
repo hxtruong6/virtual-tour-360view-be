@@ -29,7 +29,7 @@ import {
 import { VirtualToursUseCase } from './virtual-tours.use-case';
 
 @Controller({ path: '', version: EVersion.V1 })
-@ApiTags('admin/virtual-tours')
+@ApiTags('admin/tours')
 export class VirtualToursController {
 	constructor(private readonly virtualToursUseCase: VirtualToursUseCase) {}
 
