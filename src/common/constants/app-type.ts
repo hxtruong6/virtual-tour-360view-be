@@ -162,3 +162,47 @@ export interface IBattleTurnLog {
 	isDodged: boolean;
 	isCritical: boolean;
 }
+
+// Virtual Tour Enums
+export enum ETourStatus {
+	DRAFT = 'DRAFT',
+	PUBLISHED = 'PUBLISHED',
+	ARCHIVED = 'ARCHIVED',
+	UNDER_REVIEW = 'UNDER_REVIEW',
+}
+
+export enum ETourDifficulty {
+	BEGINNER = 'BEGINNER',
+	INTERMEDIATE = 'INTERMEDIATE',
+	ADVANCED = 'ADVANCED',
+}
+
+export enum EHotspotType {
+	NAVIGATION = 'NAVIGATION',
+	INFO = 'INFO',
+	INTERACTIVE = 'INTERACTIVE',
+}
+
+export enum EMediaType {
+	IMAGE = 'IMAGE',
+	VIDEO = 'VIDEO',
+	AUDIO = 'AUDIO',
+	DOCUMENT = 'DOCUMENT',
+}
+
+export enum EMediaStatus {
+	UPLOADING = 'UPLOADING',
+	PROCESSING = 'PROCESSING',
+	READY = 'READY',
+	FAILED = 'FAILED',
+	ARCHIVED = 'ARCHIVED',
+}
+
+// Add EAccountStatus if not already defined
+export enum EAccountStatus {
+	ACTIVE = 'ACTIVE',
+	INACTIVE = 'INACTIVE',
+	SUSPENDED = 'SUSPENDED',
+	PENDING_VERIFICATION = 'PENDING_VERIFICATION',
+	DEACTIVATED = 'DEACTIVATED',
+}

@@ -28,7 +28,6 @@ import { LanguageInterceptor } from './adapters/interceptors/language-intercepto
 import { TranslationInterceptor } from './adapters/interceptors/translation-interceptor.service';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
-import { GrpcExceptionFilter } from './common/filters/grpc-exception.filter';
 import { setupSwagger } from './setup-swagger';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { CustomLoggerService } from './shared/services/custom-logger.service';
@@ -93,15 +92,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 	// Setup config service
 	const configService = app.select(SharedModule).get(ApiConfigService);
 	const reflector = app.get(Reflector);
-	// const { httpAdapter } = app.get(HttpAdapterHost);
 
-	// Set up exception filters in correct order
-	// Add gRPC filter FIRST if enabled
-	if (configService.grpcConfig.enabled) {
-		app.useGlobalFilters(new GrpcExceptionFilter());
-	}
-
-	// Then add HTTP filter
 	app.useGlobalFilters(
 		new AllExceptionsFilter(
 			app.get(HttpAdapterHost),

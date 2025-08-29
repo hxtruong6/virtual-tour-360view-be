@@ -1,5 +1,3 @@
-import { type Logger } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
 import bcrypt from 'bcryptjs';
 import { type ValidationError } from 'class-validator';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
@@ -7,20 +5,10 @@ import { snakeCase } from 'lodash';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 
-import { ECurrency } from '../core/entities/currency-conversion.entity';
 import {
-	GrpcStatus,
 	PAGINATION_DEFAULT_PAGE,
 	PAGINATION_DEFAULT_PAGE_SIZE,
 } from './constants';
-import {
-	type CommonResponse,
-	type Error as GrpcError,
-	type PageResponse,
-	type ResponseMetadata,
-	type Status,
-} from './types/proto/cwgame_api';
-import { NullValue } from './types/proto/google/protobuf/struct';
 
 /**
  * generate hash from password or string
@@ -196,22 +184,6 @@ export function createItemCodeCacheKey(itemCode: string): string {
 	return `item-${itemCode}`;
 }
 
-export function standardizePrice(price: number, currency: ECurrency): number {
-	switch (currency) {
-		case ECurrency.VND: {
-			return Math.round(price);
-		}
-
-		case ECurrency.PHP: {
-			return Number(price.toFixed(2));
-		}
-
-		default: {
-			throw new Error('Unsupported currency');
-		}
-	}
-}
-
 export function isSearchableFieldDB(
 	field: string,
 	fields: Record<string, string>,
@@ -353,211 +325,16 @@ export function filterValidFields<T extends Record<string, unknown>>(
 	return filtered;
 }
 
-export function grpcResponse(
-	{
-		status,
-		data,
-		error,
-		metadata,
-	}: {
-		status?: Status;
-		// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style, @typescript-eslint/no-explicit-any
-		data?: { [key: string]: any } | undefined;
-		error?: GrpcError;
-		metadata?: ResponseMetadata;
-		// eslint-disable-next-line unicorn/no-object-as-default-parameter
-	} = {
-		status: { code: GrpcStatus.OK, message: 'Success', isSuccess: true },
-		data: undefined,
-		error: undefined,
-		metadata: undefined,
-	},
-): CommonResponse {
-	if (!status) {
-		status = { code: GrpcStatus.OK, message: 'Success', isSuccess: true };
-	}
-
-	return {
-		status,
-		data,
-		error,
-		metadata,
-	};
-}
-
-export function convertToPrimitive(data: unknown): {
-	value: unknown;
-	isPrimitive: boolean;
-} {
-	if (data === null || data === undefined) {
-		return {
-			value: { nullValue: NullValue.NULL_VALUE },
-			isPrimitive: true,
-		};
-	}
-
-	if (typeof data === 'string') {
-		return {
-			value: { stringValue: data },
-			isPrimitive: true,
-		};
-	}
-
-	if (typeof data === 'number') {
-		return {
-			value: { numberValue: data },
-			isPrimitive: true,
-		};
-	}
-
-	if (typeof data === 'boolean') {
-		return {
-			value: { boolValue: data },
-			isPrimitive: true,
-		};
-	}
-
-	return { value: data, isPrimitive: false };
-}
-
-export function convertToStruct(
-	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-	data: Record<string, unknown> | undefined | string,
-): Record<string, unknown> {
-	/*
-     Represents a null value.
-    NullValue null_value = 1;
-    Represents a double value.
-    double number_value = 2;
-    Represents a string value.
-    string string_value = 3;
-    Represents a boolean value.
-    bool bool_value = 4;
-    Represents a structured value.
-    Struct struct_value = 5;
-    Represents a repeated `Value`.
-    ListValue list_value = 6;
-    */
-	// if the data is a string, parse it to an object
-	if (typeof data === 'string') {
-		try {
-			data = JSON.parse(data) as Record<string, unknown>;
-		} catch {
-			throw new Error('Invalid JSON string');
-		}
-	}
-
-	if (data === undefined || Object.keys(data).length === 0) {
-		return { fields: {} };
-	}
-
-	const fields = Object.entries(data).map(([key, value]) => {
-		if (value === null || value === undefined) {
-			return { [key]: { nullValue: NullValue.NULL_VALUE } };
-		}
-
-		if (typeof value === 'string') {
-			return { [key]: { stringValue: value } };
-		}
-
-		if (typeof value === 'number') {
-			return { [key]: { numberValue: value } };
-		}
-
-		if (typeof value === 'boolean') {
-			return { [key]: { boolValue: value } };
-		}
-
-		// array
-		if (Array.isArray(value)) {
-			return {
-				[key]: {
-					listValue: {
-						values: value.map((v) => {
-							const { value: primitiveValue, isPrimitive } =
-								convertToPrimitive(v);
-
-							if (isPrimitive) {
-								return primitiveValue;
-							}
-
-							return convertToStruct(v as Record<string, unknown>);
-						}),
-					},
-				},
-			};
-		}
-
-		if (typeof value === 'object') {
-			return {
-				[key]: {
-					structValue: convertToStruct(value as Record<string, unknown>),
-				},
-			};
-		}
-
-		return { [key]: { stringValue: NullValue.UNRECOGNIZED } };
-	});
-
-	return { fields: Object.assign({}, ...fields) };
-}
-
-export function convertToGrpcPagination({
-	page,
-	pageSize,
-	total,
-	pageToken,
-}: {
-	page?: number;
-	pageSize?: number;
-	total: number;
-	pageToken?: string;
-}): PageResponse {
-	page = page || PAGINATION_DEFAULT_PAGE;
-	pageSize = pageSize || PAGINATION_DEFAULT_PAGE_SIZE;
-
-	const totalPages = Math.ceil(total / pageSize);
-	const pagination: PageResponse = {
-		pageToken: pageToken || '',
-		nextPageToken: page < totalPages ? `page_${page + 1}` : '',
-		prevPageToken: page > 1 ? `page_${page - 1}` : '',
-		totalCount: total,
-		totalPages,
-		currentPage: page,
-		pageSize,
-	};
-
-	return pagination;
-}
-
 /**
- * Throw a grpc error as format: DisplayMessage || RealMessage from server
+ * Generate a URL-friendly slug from a string
+ * @param {string} text - The input text to convert to slug
+ * @returns {string} - URL-friendly slug
  */
-export function throwGrpcError(
-	logger: Logger,
-	error: Error | RpcException,
-	message: string,
-	params?: Record<string, unknown>,
-): RpcException {
-	logger.error({
-		displayMessage: message,
-		message: error.message || message,
-		...(error instanceof RpcException && {
-			error: { code: (error.getError() as { code: number }).code },
-		}),
-		stack: error.stack,
-		...(params && { params }),
-	});
-
-	if (error instanceof RpcException) {
-		throw error;
-	}
-
-	const displayMessage =
-		error.message && error.message !== message ? error.message : message;
-
-	return new RpcException({
-		code: GrpcStatus.INTERNAL,
-		message: displayMessage,
-	});
+export function generateSlug(text: string): string {
+	return text
+		.toLowerCase()
+		.trim()
+		.replaceAll(/[^\s\w-]/g, '') // Remove special characters
+		.replaceAll(/[\s_-]+/g, '-') // Replace spaces, underscores, and hyphens with single hyphen
+		.replaceAll(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
 }

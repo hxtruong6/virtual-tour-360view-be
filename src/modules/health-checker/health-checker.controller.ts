@@ -8,7 +8,6 @@ import {
 
 import { ETranslateKey } from '../../common/constants/enums';
 import { TranslationService } from '../../shared/services/translation.service';
-import { DatabaseHealthIndicator } from './health-indicators/database.indicator';
 
 // import { ServiceHealthIndicator } from './health-indicators/service.indicator';
 
@@ -18,7 +17,7 @@ export class HealthCheckerController {
 		private healthCheckService: HealthCheckService,
 		// private ormIndicator: TypeOrmHealthIndicator,
 		// private serviceIndicator: ServiceHealthIndicator,
-		private databaseHealthIndicator: DatabaseHealthIndicator,
+		// private databaseHealthIndicator: DatabaseHealthIndicator,
 		private translationService: TranslationService,
 	) {}
 

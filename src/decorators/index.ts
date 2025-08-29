@@ -12,4 +12,3 @@ export * from './translate-message.decorator';
 export * from './use-dto.decorator';
 export * from './user-type.decorator';
 export * from './validator.decorators';
-export * from './grpc-auth.decorator';

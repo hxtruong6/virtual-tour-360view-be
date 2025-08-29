@@ -115,3 +115,7 @@ export enum ENotificationTemplate {
 	BOOKING_CONFIRMED = 'booking_confirmed',
 	BOOKING_REJECTED = 'booking_rejected',
 }
+
+export enum EVersion {
+	V1 = '1',
+}
