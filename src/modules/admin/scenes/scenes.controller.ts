@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { EUserType, EVersion } from '../../../common/constants';
+import { EVersion } from '../../../common/constants';
 import { AuthenUser } from '../../../core/entities';
 import { AuthUser } from '../../../decorators';
 import { Auth } from '../../../decorators/http.decorators';

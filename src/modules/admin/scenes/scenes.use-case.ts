@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 
 import {
-	ADMIN_USER_ID,
 	EOrder,
 	SCENE_ORDER_BY,
 	SCENE_QUERY_BY,
@@ -30,6 +29,8 @@ import {
 
 @Injectable()
 export class ScenesUseCase {
+	private static readonly virtualTourNotFound = 'Virtual tour not found';
+
 	constructor(private readonly prisma: PrismaService) {}
 
 	async getScenesByTourId(
@@ -51,8 +52,7 @@ export class ScenesUseCase {
 		});
 
 		if (!tour) {
-			// eslint-disable-next-line sonarjs/no-duplicate-string
-			throw new NotFoundException('Virtual tour not found');
+			throw new NotFoundException(ScenesUseCase.virtualTourNotFound);
 		}
 
 		// Build where clause
@@ -109,7 +109,7 @@ export class ScenesUseCase {
 		});
 
 		if (!tour) {
-			throw new NotFoundException('Virtual tour not found');
+			throw new NotFoundException(ScenesUseCase.virtualTourNotFound);
 		}
 
 		const scene = await this.prisma.scene.findFirst({
@@ -144,7 +144,7 @@ export class ScenesUseCase {
 		});
 
 		if (!tour) {
-			throw new NotFoundException('Virtual tour not found');
+			throw new NotFoundException(ScenesUseCase.virtualTourNotFound);
 		}
 
 		// Check if order already exists for this tour
@@ -205,7 +205,7 @@ export class ScenesUseCase {
 		});
 
 		if (!tour) {
-			throw new NotFoundException('Virtual tour not found');
+			throw new NotFoundException(ScenesUseCase.virtualTourNotFound);
 		}
 
 		// Verify scene exists
@@ -264,7 +264,7 @@ export class ScenesUseCase {
 		});
 
 		if (!tour) {
-			throw new NotFoundException('Virtual tour not found');
+			throw new NotFoundException(ScenesUseCase.virtualTourNotFound);
 		}
 
 		// Verify scene exists
@@ -303,7 +303,7 @@ export class ScenesUseCase {
 		});
 
 		if (!tour) {
-			throw new NotFoundException('Virtual tour not found');
+			throw new NotFoundException(ScenesUseCase.virtualTourNotFound);
 		}
 
 		const createdScenes: SceneEntity[] = [];
@@ -365,7 +365,7 @@ export class ScenesUseCase {
 		});
 
 		if (!tour) {
-			throw new NotFoundException('Virtual tour not found');
+			throw new NotFoundException(ScenesUseCase.virtualTourNotFound);
 		}
 
 		// Verify all scenes exist and belong to the tour
@@ -394,11 +394,13 @@ export class ScenesUseCase {
 		});
 
 		// Return updated scenes list
-		return this.getScenesByTourId(tourId, {
+		const requestDto = {
 			page: 1,
 			pageSize: 100,
 			orderBy: 'order',
 			order: EOrder.ASC,
-		});
+		} as SceneRequestDto;
+
+		return this.getScenesByTourId(tourId, requestDto);
 	}
 }

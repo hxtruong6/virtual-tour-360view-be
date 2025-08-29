@@ -214,8 +214,9 @@ This document tracks the implementation status of all API endpoints and features
 
 - ✅ Admin auth DTOs (login, profile)
 - ✅ Virtual tour DTOs (CRUD operations)
+- ✅ Scene DTOs (CRUD operations, bulk actions)
 - ❌ User auth DTOs
-- ❌ Scene and hotspot DTOs
+- ❌ Hotspot DTOs
 - ❌ Media upload DTOs
 - ❌ Analytics DTOs
 
@@ -234,22 +235,24 @@ This document tracks the implementation status of all API endpoints and features
 
 1. Admin authentication system with Prisma integration
 2. Virtual tours CRUD operations (admin panel)
-3. Database seeding for admin user
-4. JWT token validation for admin routes
-5. DTOs aligned with Prisma entities
+3. Scene management CRUD operations (admin panel)
+4. Database seeding for admin user
+5. JWT token validation for admin routes
+6. DTOs aligned with Prisma entities with proper pagination
+7. Bulk scene operations and reordering functionality
 
 ### 🚧 **In Progress:**
 
-1. Fine-tuning admin authentication flow
-2. Testing admin login with seeded data
+1. Code quality improvements and linting fixes
+2. Testing scene management endpoints
 
 ### 📋 **Next Sprint Priorities:**
 
-1. **Public Virtual Tours API** - Allow public access to published tours
-2. **Scene Management** - CRUD operations for tour scenes
-3. **Media Upload** - Panorama image upload and processing
-4. **Hotspot Management** - Interactive hotspots within scenes
-5. **User Registration & Authentication** - Non-admin user system
+1. **Hotspot Management** - Interactive hotspots within scenes
+2. **Media Upload** - Panorama image upload and processing
+3. **Public Virtual Tours API** - Allow public access to published tours
+4. **User Registration & Authentication** - Non-admin user system
+5. **Analytics** - Basic tracking for tours and scenes
 
 ---
 
@@ -259,6 +262,7 @@ This document tracks the implementation status of all API endpoints and features
 
 - ✅ Admin login endpoint tested
 - ✅ Virtual tours CRUD operations tested
+- 🚧 Scene management CRUD operations (ready for testing)
 - ❌ Public tours access
 - ❌ File upload functionality
 - ❌ User registration flow
