@@ -1,0 +1,39 @@
+{
+	"messages": {
+		"profile": {
+			"updated": "Profile successfully updated",
+			"not_found": "User profile not found"
+		},
+		"card": {
+			"created": "Card successfully created",
+			"updated": "Card successfully updated",
+			"deleted": "Card successfully deleted",
+			"not_found": "Card not found"
+		},
+		"account": {
+			"status": {
+				"active": "Account is active",
+				"inactive": "Account is inactive",
+				"pending": "Account is pending verification",
+				"new": "New account",
+				"deactivated": "Account has been deactivated"
+			}
+		},
+		"expert": {
+			"status": {
+				"pending": "Expert verification pending",
+				"approved": "Expert verified",
+				"rejected": "Expert verification rejected"
+			}
+		}
+	},
+	"errors": {
+		"already_exists": "User with this phone number or email already exists",
+		"not_found": "User not found",
+		"invalid_phone": "Invalid phone number format",
+		"invalid_password": "Invalid password format",
+		"invalid_referral": "Invalid referral code",
+		"emergency_contact": "Emergency contact phone country code is required",
+		"forbidden": "You are not authorized to perform this action"
+	}
+}

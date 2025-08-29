@@ -1,0 +1,8 @@
+.git
+dist
+node_modules
+db-data
+.vuepress
+.vscode
+docs
+.gitignore

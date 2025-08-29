@@ -1,0 +1,15 @@
+{
+	"booking": {
+		"already_paid": "Booking already paid",
+		"not_found": "Booking not found",
+		"customer_not_found": "Customer not found",
+		"invalid_status": "Booking status is not valid for payment",
+		"amount_not_match": "Amount does not match with the booking amount"
+	},
+	"voucher": {
+		"duplicate": "Duplicate vouchers detected",
+		"invalid": "Voucher is not valid",
+		"invalid_usage": "Voucher usage is not valid",
+		"invalid_status": "Voucher status is invalid"
+	}
+}

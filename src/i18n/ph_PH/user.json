@@ -1,0 +1,39 @@
+{
+	"messages": {
+		"profile": {
+			"updated": "Matagumpay na na-update ang profile",
+			"not_found": "Hindi mahanap ang profile ng user"
+		},
+		"card": {
+			"created": "Matagumpay na nalikha ang card",
+			"updated": "Matagumpay na na-update ang card",
+			"deleted": "Matagumpay na natanggal ang card",
+			"not_found": "Hindi mahanap ang card"
+		},
+		"account": {
+			"status": {
+				"active": "Aktibo ang account",
+				"inactive": "Hindi aktibo ang account",
+				"pending": "Naghihintay ng verification ang account",
+				"new": "Bagong account",
+				"deactivated": "Na-deactivate na ang account"
+			}
+		},
+		"expert": {
+			"status": {
+				"pending": "Naghihintay ng verification ang expert",
+				"approved": "Na-verify na ang expert",
+				"rejected": "Hindi na-approve ang expert verification"
+			}
+		}
+	},
+	"errors": {
+		"already_exists": "May user na gumagamit ng number o email na ito",
+		"not_found": "Hindi mahanap ang user",
+		"invalid_phone": "Hindi wastong format ng numero ng telepono",
+		"invalid_password": "Hindi wastong format ng password",
+		"invalid_referral": "Hindi wastong referral code",
+		"emergency_contact": "Kinakailangan ang country code ng emergency contact",
+		"forbidden": "Wala kang pahintulot na gawin ang pagkilos na ito"
+	}
+}

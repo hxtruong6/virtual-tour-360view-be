@@ -1,0 +1,45 @@
+{
+	"errors": {
+		"something_went_wrong": "May error na nangyari",
+		"not_found": "Hindi natagpuan ang resource",
+		"unauthorized": "Hindi awtorisadong access",
+		"forbidden": "Ipinagbabawal na access",
+		"validation_error": "May error sa validation",
+		"internal_server_error": "May internal server error",
+		"field_required": "{field} ay kinakailangan",
+		"bad_request": "Hindi wastong kahilingan",
+		"validation": {
+			"isNotEmpty": "Hindi maaaring walang laman ang field",
+			"isString": "Dapat string",
+			"isNumber": "Dapat numero",
+			"isEmail": "Dapat wastong email"
+		},
+		"unknown": "May error na nangyari: {message}",
+		"password_invalid_characters": "Walang mga invalid na character sa password: {characters}",
+		"phone_required": "Dapat maglagay ng numero ng telepono",
+		"email_required": "Dapat maglagay ng email"
+	},
+	"success": {
+		"created": "Matagumpay na nalikha",
+		"updated": "Matagumpay na na-update",
+		"deleted": "Matagumpay na natanggal"
+	},
+	"validation": {
+		"required": "Kinakailangan ang {field}",
+		"invalid_email": "Hindi wastong format ng email",
+		"min_length": "Ang {field} ay dapat hindi bababa sa {min} na character",
+		"max_length": "Ang {field} ay hindi dapat lumampas sa {max} na character"
+	},
+	"auth": {
+		"login_success": "Matagumpay na naka-login",
+		"logout_success": "Matagumpay na naka-logout",
+		"invalid_credentials": "Hindi wastong email o password"
+	},
+	"user": {
+		"profile_updated": "Matagumpay na na-update ang profile",
+		"password_changed": "Matagumpay na nabago ang password"
+	},
+	"admin": {
+		"welcome": "Kamusta na {name}. At {time}"
+	}
+}

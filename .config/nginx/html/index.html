@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iProtect - Welcome</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
+
+    <style>
+      /* Reset some browser styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Beautiful background with gradient */
+      body {
+        height: 100vh;
+        background: linear-gradient(135deg, #74ebd5, #9face6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+        overflow: hidden;
+      }
+
+      /* Styling for the card container */
+      .container {
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        animation: fadeIn 1.5s ease-in-out;
+        max-width: 400px;
+      }
+
+      /* Title Styles */
+      h1 {
+        font-size: 2.5rem;
+        color: #444;
+        margin-bottom: 16px;
+      }
+
+      /* Subtitle / Message styles */
+      p {
+        font-size: 1.2rem;
+        color: #555;
+        margin-bottom: 24px;
+      }
+
+      /* Button with hover animation */
+      .welcome-button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #74c0fc;
+        color: white;
+        border: none;
+        border-radius: 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+      }
+
+      .welcome-button:hover {
+        background-color: #4ea8de;
+        transform: scale(1.05);
+      }
+
+      /* Keyframe animation */
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>iProtect</h1>
+      <p>Welcome to iProtect | Xin chào | Hello | ようこそ</p>
+      <button class="welcome-button" onclick="alert('Welcome to iProtect!')">Say Hello</button>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		"module": "CommonJS",
+		"declaration": false,
+		"noImplicitAny": false,
+		"removeComments": true,
+		"noLib": false,
+		"importHelpers": true,
+		"allowSyntheticDefaultImports": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"resolveJsonModule": true,
+        "moduleResolution": "node",
+		"esModuleInterop": true,
+		"target": "ES2022",
+		"sourceMap": true,
+		"outDir": "./dist",
+		// "baseUrl": "./",
+		// "paths": {
+		// 	"@/*": ["./src/*"],
+		// },
+		"incremental": true,
+		"strictNullChecks": true,
+		"skipLibCheck": true,
+		"noUnusedParameters": false,
+		"noUnusedLocals": false,
+		"strict": true
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "dist", "seeds", "ormconfig.ts"]
+}

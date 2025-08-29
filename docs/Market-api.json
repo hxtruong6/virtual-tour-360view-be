@@ -1,0 +1,319 @@
+{
+	"info": {
+		"name": "NFT Marketplace API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\": \"Klink CW\", \"password\": \"password123\"}"
+						},
+						"url": {
+							"raw": "https://api.example.com/api/auth/login",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\": \"Klink CW\", \"password\": \"password123\", \"confirmPassword\": \"password123\", \"email\": \"CWgamekh@gmail.com\"}"
+						},
+						"url": {
+							"raw": "https://api.example.com/api/auth/register",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "auth", "register"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Profile",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI5NiIsInR5cCI6IkpXVCJ9..."
+							}
+						],
+						"url": {
+							"raw": "https://api.example.com/api/profile",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "profile"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI5NiIsInR5cCI6IkpXVCJ9..."
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"phone\": \"0123 *** 789\", \"email\": \"CWgamekh@gmail.com\"}"
+						},
+						"url": {
+							"raw": "https://api.example.com/api/profile/update",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "profile", "update"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NFT Management",
+			"item": [
+				{
+					"name": "Get All NFTs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI5NiIsInR5cCI6IkpXVCJ9..."
+							}
+						],
+						"url": {
+							"raw": "https://api.example.com/api/nfts/all?type=land&status=market&category=Winter&page=1&pageSize=10&sortBy=price&order=asc",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "nfts", "all"],
+							"query": [
+								{ "key": "type", "value": "land" },
+								{ "key": "status", "value": "market" },
+								{ "key": "category", "value": "Winter" },
+								{ "key": "page", "value": "1" },
+								{ "key": "pageSize", "value": "10" },
+								{ "key": "sortBy", "value": "price" },
+								{ "key": "order", "value": "asc" }
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buy NFT",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI5NiIsInR5cCI6IkpXVCJ9..."
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nftId\": \"NFT 765\", \"quantity\": 1}"
+						},
+						"url": {
+							"raw": "https://api.example.com/api/nfts/buy",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "nfts", "buy"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NFT Auction",
+			"item": [
+				{
+					"name": "Get Auctions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI5NiIsInR5cCI6IkpXVCJ9..."
+							}
+						],
+						"url": {
+							"raw": "https://api.example.com/api/auctions?nftId=NFT 765&status=active",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "auctions"],
+							"query": [
+								{ "key": "nftId", "value": "NFT 765" },
+								{ "key": "status", "value": "active" }
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Place Bid",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI5NiIsInR5cCI6IkpXVCJ9..."
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nftId\": \"NFT 765\", \"bidAmount\": 100}"
+						},
+						"url": {
+							"raw": "https://api.example.com/api/auctions/bid",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "auctions", "bid"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "End Auction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI5NiIsInR5cCI6IkpXVCJ9..."
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nftId\": \"NFT 765\"}"
+						},
+						"url": {
+							"raw": "https://api.example.com/api/auctions/end",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "auctions", "end"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "News Feature",
+			"item": [
+				{
+					"name": "Get News",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.example.com/api/news?page=1&pageSize=10",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "news"],
+							"query": [
+								{ "key": "page", "value": "1" },
+								{ "key": "pageSize", "value": "10" }
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Event Banners",
+			"item": [
+				{
+					"name": "Get Banners",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.example.com/api/events/banners",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "events", "banners"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wallet Management",
+			"item": [
+				{
+					"name": "Deposit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI5NiIsInR5cCI6IkpXVCJ9..."
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"amount\": 100}"
+						},
+						"url": {
+							"raw": "https://api.example.com/api/wallet/deposit",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "wallet", "deposit"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI5NiIsInR5cCI6IkpXVCJ9..."
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"amount\": 50}"
+						},
+						"url": {
+							"raw": "https://api.example.com/api/wallet/withdraw",
+							"protocol": "https",
+							"host": ["api", "example", "com"],
+							"path": ["api", "wallet", "withdraw"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

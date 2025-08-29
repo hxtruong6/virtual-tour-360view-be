@@ -1,0 +1,15 @@
+{
+	"booking": {
+		"already_paid": "Bayad na ang booking",
+		"not_found": "Hindi natagpuan ang booking",
+		"customer_not_found": "Hindi natagpuan ang customer",
+		"invalid_status": "Hindi wasto ang status ng booking para sa bayad",
+		"amount_not_match": "Hindi tugma ang halaga ng booking at ang bayad"
+	},
+	"voucher": {
+		"duplicate": "May nakitang dobleng voucher",
+		"invalid": "Hindi wasto ang voucher",
+		"invalid_usage": "Hindi wasto ang paggamit ng voucher",
+		"invalid_status": "Hindi wasto ang status ng voucher"
+	}
+}

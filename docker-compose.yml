@@ -1,0 +1,83 @@
+services:
+  cwgame_backend:
+    env_file:
+      - .env.production
+    volumes:
+      - ./gcs.json:/app/gcs.json
+      - ./logs:/app/logs
+    container_name: cwgame_backend
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "$PORT:$PORT"
+    networks:
+      - cwgame_network
+    depends_on:
+      - cwgame_postgres
+      - cwgame_redis
+
+  cwgame_postgres:
+    image: postgres:15
+    container_name: cwgame_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cwgame_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env.production
+    networks:
+      - cwgame_network
+
+  # pgadmin:
+  #   container_name: cwgame_pgadmin
+  #   image: dpage/pgadmin4
+  #   ports:
+  #     - "8080:80"
+  #   volumes:
+  #     - /data/pgadmin:/root/.pgadmin
+  #   env_file:
+  #     - .env
+  #   links:
+  #     - postgres
+
+
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: cwgame_nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/conf.d:/etc/nginx/conf.d:ro  # Include modular configs
+  #     - /etc/letsencrypt:/etc/letsencrypt:ro # Mount letsencrypt SSL certificates
+  #     # - ./nginx/html:/var/www/html:ro  # Serve static files
+  #   restart: always
+  #   networks:
+  #     - cwgame_network
+  #   depends_on:
+  #     - cwgame_backend
+
+  cwgame_redis:
+    image: redis:alpine
+    container_name: cwgame_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - cwgame_network
+
+
+
+networks:
+  cwgame_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pgadmin_data:

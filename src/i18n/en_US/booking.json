@@ -1,0 +1,47 @@
+{
+	"booking": {
+		"status": {
+			"pending": "Pending",
+			"confirmed": "Confirmed",
+			"cancelled": "Cancelled",
+			"completed": "Completed",
+			"draft": "Draft",
+			"in_progress": "In Progress",
+			"cancel_by_customer": "Cancelled by Customer",
+			"cancel_by_expert": "Cancelled by Expert",
+			"cancel_by_admin": "Cancelled by Admin"
+		},
+		"messages": {
+			"created": "Booking successfully created",
+			"updated": "Booking successfully updated",
+			"cancelled": "Booking cancelled",
+			"not_found": "Booking not found",
+			"already_cancelled": "Booking is already cancelled",
+			"cannot_cancel": "Cannot cancel this booking",
+			"cannot_modify": "Cannot modify this booking",
+			"expert_assigned": "Expert successfully assigned to booking",
+			"expert_rejected": "Expert rejected the booking",
+			"expert_accepted": "Expert accepted the booking",
+			"expert_arrived": "Expert has arrived at location",
+			"expert_completed": "Expert has completed the booking",
+			"work_shift_assigned": "Work shift successfully assigned",
+			"invalid_car_model": "Invalid car model selected",
+			"dangerous_level_calculated": "Dangerous level calculated successfully",
+			"deleted": "Booking successfully deleted"
+		},
+		"validation": {
+			"invalid_date": "Invalid booking date",
+			"past_date": "Cannot book for past dates",
+			"unavailable": "Selected time slot is unavailable",
+			"overlap": "Booking overlaps with existing schedule",
+			"invalid_status": "Invalid booking status",
+			"invalid_action": "Invalid action for current booking status"
+		},
+		"errors": {
+			"not_created": "Booking could not be created",
+			"expert_not_found": "Expert not found",
+			"invalid_expert_status": "Invalid expert status",
+			"invalid_booking_status": "Invalid booking status"
+		}
+	}
+}

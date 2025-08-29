@@ -1,0 +1,97 @@
+{
+	"welcome": {
+		"title": "Maligayang Pagdating sa iProtect",
+		"message": "Maligayang Pagdating sa iProtect, ang iyong matatag na tagapagtulong sa iyong proteksyon."
+	},
+	"booking": {
+		"customer_waiting_for_payment": {
+			"title": "[{displayId}] Ang iyong booking ay nasa pagbabayad",
+			"message": "Mangyaring magbayad para i-confirm ang iyong booking. Ang aming team ay mag-process ng booking pagkatapos na natapos ang bayad."
+		},
+		"expert_rejected": {
+			"title": "[{displayId}] Expert {expertName} Tumanggi sa Booking",
+			"message": "Ang expert na si {expertName} ay tumanggi sa booking assignment para sa booking {displayId}"
+		},
+		"refund_voucher": {
+			"title": "[{displayId}] Refund Voucher na Inilabas",
+			"message": "Ang iyong refund ay na-process na. Isang voucher ang ipinadala sa iyo. Voucher code: {code}"
+		},
+		"request_complete": {
+			"title": "[{displayId}] Hiniling na Tapusin ang Booking",
+			"message": "Ang booking {displayId} ay hiniling na tapusin ng expert"
+		},
+		"request_admin_arrange_work_shift": {
+			"title": "[{displayId}] Hiniling na I-arrange ang Work Shift",
+			"message": "Ang booking {displayId} ay hiniling na i-arrange ng admin ang work shift"
+		},
+		"booking_is_active": {
+			"title": "[{displayId}] Ang booking ay aktibo na",
+			"message": "Ang iyong booking {displayId} ay aktibo na"
+		},
+		"expert_requesting_complete": {
+			"title": "[{displayId}] Hiniling na Tapusin ang Booking",
+			"message": "Ang expert ay hiniling na tapusin ang booking {displayId}"
+		},
+		"payment_verified": {
+			"title": "[{displayId}] Matagumpay na Pagbabayad",
+			"message": "Matagumpay ang iyong pagbabayad para sa booking {displayId}"
+		},
+		"cancelled_by_admin": {
+			"title": "[{displayId}] Naisang tanggalin ang booking",
+			"message": "Ang booking {displayId} ay naisang tanggalin ng admin"
+		},
+		"booking_completed": {
+			"title": "[{displayId}] Natapos na booking",
+			"message": "Natapos na ang booking {displayId}"
+		},
+		"car_info_updated": {
+			"title": "Na-update ang [{displayId}] Info ng Sasakyan",
+			"message": "Na-update ang iyong booking {displayId} gamit ang plaka ng sasakyan {licensePlate}"
+		}
+	},
+	"payment": {
+		"success": {
+			"title": "Matagumpay na Pagbabayad",
+			"message": "Matagumpay ang iyong pagbabayad para sa booking {displayId}"
+		},
+		"failed": {
+			"title": "Hindi Matagumpay na Pagbabayad",
+			"message": "Hindi matagumpay ang iyong pagbabayad para sa booking {displayId}"
+		},
+		"payment_by_cash": {
+			"title": "[{displayId}] Pagbabayad sa Cash",
+			"message": "Kailangan mong makipag-ugnayan sa admin para magbayad para sa booking {displayId}"
+		},
+		"payment_by_paymongo": {
+			"title": "[{displayId}] Pagbabayad sa Online",
+			"message": "I-access ang link ng pagbabayad upang magbayad para sa booking {displayId}"
+		},
+		"inform_to_admin_verify_payment": {
+			"title": "[{displayId}] Ang kahilingan sa pagbabayad ay ma-verify",
+			"message": "Ang booking {displayId} ay kinakailangan na ito ay verified ng admin"
+		},
+		"payment_paid": {
+			"title": "[{displayId}] Matagumpay na nabayaran ang pagbabayad",
+			"message": "Ang iyong booking {displayId} ay matagumpay na nabayaran ng {amount}"
+		},
+		"payment_paid_to_admin": {
+			"title": "[{displayId}] Ang booking ay matagumpay na binayaran ng customer",
+			"message": "Ang booking na {displayId} ay matagumpay na nabayaran ng {amount} ng customer"
+		}
+	},
+
+	"announcement": {
+		"title": "Anunsyo",
+		"message": "{message}"
+	},
+	"wallet": {
+		"withdrawal_request_approved": {
+			"title": "Natapos na Pagtanggap ng Pagtanggap",
+			"message": "Your withdrawal request has been approved by admin."
+		},
+		"withdrawal_request_rejected": {
+			"title": "Hindi Natapos na Pagtanggap ng Pagtanggap",
+			"message": "Hindi natapos na ang pagtanggap ng pagtanggap para sa booking {displayId}"
+		}
+	}
+}

@@ -1,0 +1,6 @@
+node_modules/
+dist/
+ormconfig.ts
+scripts/deploy/ecosystem.config.js
+scripts/deploy/ecosystem-prod.config.js
+src/common/types/proto/

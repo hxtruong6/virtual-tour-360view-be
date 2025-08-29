@@ -1,0 +1,45 @@
+{
+	"errors": {
+		"something_went_wrong": "Something went wrong",
+		"not_found": "Resource not found",
+		"unauthorized": "Unauthorized access",
+		"forbidden": "Forbidden access",
+		"validation_error": "Validation error",
+		"internal_server_error": "Internal server error",
+		"field_required": "{field} is required",
+		"bad_request": "Bad request",
+		"validation": {
+			"isNotEmpty": "Field cannot be empty",
+			"isString": "Must be a string",
+			"isNumber": "Must be a number",
+			"isEmail": "Must be a valid email"
+		},
+		"unknown": "An error occurred: {message}",
+		"password_invalid_characters": "Password contains invalid characters: {characters}",
+		"phone_required": "Phone is required",
+		"email_required": "Email is required"
+	},
+	"success": {
+		"created": "Successfully created",
+		"updated": "Successfully updated",
+		"deleted": "Successfully deleted"
+	},
+	"validation": {
+		"required": "{field} is required",
+		"invalid_email": "Invalid email format",
+		"min_length": "{field} must be at least {min} characters",
+		"max_length": "{field} must not exceed {max} characters"
+	},
+	"auth": {
+		"login_success": "Successfully logged in",
+		"logout_success": "Successfully logged out",
+		"invalid_credentials": "Invalid email or password"
+	},
+	"user": {
+		"profile_updated": "Profile successfully updated",
+		"password_changed": "Password successfully changed"
+	},
+	"admin": {
+		"welcome": "Hello World {name}. At {time}"
+	}
+}

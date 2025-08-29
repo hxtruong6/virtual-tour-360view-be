@@ -1,0 +1,47 @@
+{
+	"booking": {
+		"status": {
+			"pending": "Naghihintay",
+			"confirmed": "Nakumpirma",
+			"cancelled": "Nakansela",
+			"completed": "Nakumpleto",
+			"draft": "Draft",
+			"in_progress": "Kasalukuyang Ginagawa",
+			"cancel_by_customer": "Kinansela ng Customer",
+			"cancel_by_expert": "Kinansela ng Expert",
+			"cancel_by_admin": "Kinansela ng Admin"
+		},
+		"messages": {
+			"created": "Matagumpay na nalikha ang booking",
+			"updated": "Matagumpay na na-update ang booking",
+			"cancelled": "Nakansela ang booking",
+			"not_found": "Hindi mahanap ang booking",
+			"already_cancelled": "Nakansela na ang booking",
+			"cannot_cancel": "Hindi maaaring kanselahin ang booking na ito",
+			"cannot_modify": "Hindi maaaring baguhin ang booking na ito",
+			"expert_assigned": "Matagumpay na naitakda ang expert sa booking",
+			"expert_rejected": "Tinanggihan ng expert ang booking",
+			"expert_accepted": "Tinanggap ng expert ang booking",
+			"expert_arrived": "Dumating na ang expert sa lokasyon",
+			"expert_completed": "Nakumpleto na ng expert ang booking",
+			"work_shift_assigned": "Matagumpay na naitakda ang work shift",
+			"invalid_car_model": "Hindi wastong modelo ng sasakyan ang napili",
+			"dangerous_level_calculated": "Matagumpay na nakalkula ang antas ng panganib",
+			"deleted": "Matagumpay na natanggal ang booking"
+		},
+		"validation": {
+			"invalid_date": "Hindi wastong petsa ng booking",
+			"past_date": "Hindi maaaring mag-book sa nakaraang petsa",
+			"unavailable": "Hindi available ang napiling oras",
+			"overlap": "Nagkakasabay sa umiiral na iskedyul",
+			"invalid_status": "Hindi wastong status ng booking",
+			"invalid_action": "Hindi wastong aksyon para sa kasalukuyang status ng booking"
+		},
+		"errors": {
+			"not_created": "Hindi malikha ang booking",
+			"expert_not_found": "Hindi mahanap ang expert",
+			"invalid_expert_status": "Hindi wastong status ng expert",
+			"invalid_booking_status": "Hindi wastong status ng booking"
+		}
+	}
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CWGame Asia - OTP Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #eaeaea;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            color: #333;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .otp-code-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .otp-code {
+            font-family: 'Courier New', monospace;
+            background-color: #f8f8f8;
+            padding: 20px 40px;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #333;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: left;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .warning ul {
+            padding-left: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding: 20px;
+            border-top: 1px solid #eaeaea;
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: #333;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Your Verification Code</h1>
+        </div>
+
+        <div class="content">
+            <p>Hello <%= fullName %>,</p>
+
+            <p>Use the following one-time password (OTP) to complete your verification process for CWGame Asia:</p>
+
+            <div class="otp-code-container">
+                <div class="otp-code">
+                    <%= otpCode %>
+                </div>
+            </div>
+
+            <p>This code is valid for <strong><%= expiryTime %></strong>. Please do not share this code with anyone.</p>
+
+            <div class="warning">
+                <strong>Security Reminder:</strong>
+                <ul>
+                    <li>CWGame Asia will never ask for this code.</li>
+                    <li>Never share your OTP with anyone, including our support team.</li>
+                    <li>If you didn't request this, please ignore this email.</li>
+                </ul>
+            </div>
+
+            <p>If you need help, contact our support team at <a href="mailto:support@cwgameasia.com">support@cwgameasia.com</a>.</p>
+
+            <p>Best regards,</p>
+            <p><strong>CWGame Asia Team</strong></p>
+        </div>
+
+        <div class="footer">
+            <p>This is an automated message. Please do not reply.</p>
+            <p>Need help? <a href="https://cwgameasia.com/support">Visit our Support Center</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

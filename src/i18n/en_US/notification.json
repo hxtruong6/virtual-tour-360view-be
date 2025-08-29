@@ -1,0 +1,96 @@
+{
+	"welcome": {
+		"title": "Welcome to iProtect",
+		"message": "Welcome to iProtect, your trusted partner in protecting you whenever you need."
+	},
+	"booking": {
+		"customer_waiting_for_payment": {
+			"title": "[{displayId}] Your booking is waiting for payment",
+			"message": "Please make a payment to confirm your booking. iProtect will process your booking after the payment is confirmed."
+		},
+		"expert_rejected": {
+			"title": "[{displayId}] Expert {expertName} Rejected Booking",
+			"message": "Expert {expertName} has rejected the booking assignment for booking {displayId}"
+		},
+		"refund_voucher": {
+			"title": "[{displayId}] Refund Voucher Issued",
+			"message": "Your refund has been processed. A voucher has been sent to you. Voucher code: {code}"
+		},
+		"request_complete": {
+			"title": "[{displayId}] Booking Completion Requested",
+			"message": "Booking {displayId} has been requested to be completed by the expert"
+		},
+		"request_admin_arrange_work_shift": {
+			"title": "[{displayId}] Work Shift Arrangement Requested",
+			"message": "Booking {displayId} has been requested for admin to arrange work shift"
+		},
+		"booking_is_active": {
+			"title": "[{displayId}] Booking is Active",
+			"message": "Your booking {displayId} is now active"
+		},
+		"expert_requesting_complete": {
+			"title": "[{displayId}] Expert Requesting Booking Completion",
+			"message": "The expert has requested to complete the booking {displayId}"
+		},
+		"payment_verified": {
+			"title": "[{displayId}] Payment Verified",
+			"message": "Your booking {displayId} is verified payment"
+		},
+		"cancelled_by_admin": {
+			"title": "[{displayId}] Booking Cancelled by Admin",
+			"message": "Your booking {displayId} has been cancelled by admin"
+		},
+		"booking_completed": {
+			"title": "[{displayId}] Booking Completed",
+			"message": "Your booking {displayId} has been completed"
+		},
+		"car_info_updated": {
+			"title": "[{displayId}] Car Info Updated",
+			"message": "Your booking {displayId} has been updated with car license plate {licensePlate}"
+		}
+	},
+	"payment": {
+		"success": {
+			"title": "Payment Successful",
+			"message": "Your payment for booking {displayId} was successful"
+		},
+		"failed": {
+			"title": "Payment Failed",
+			"message": "Your payment for booking {displayId} failed"
+		},
+		"payment_by_cash": {
+			"title": "[{displayId}] Payment by Cash request",
+			"message": "You need to contact the admin to make a payment for booking {displayId}"
+		},
+		"payment_by_paymongo": {
+			"title": "[{displayId}] Payment online request",
+			"message": "Access the payment link to make a payment for booking {displayId}"
+		},
+		"inform_to_admin_verify_payment": {
+			"title": "[{displayId}] Payment request to be verified",
+			"message": "The booking {displayId} has been requested to be verified payment by admin"
+		},
+		"payment_paid": {
+			"title": "[{displayId}] Payment paid successfully",
+			"message": "Your booking {displayId} has been paid {amount} successfully"
+		},
+		"payment_paid_to_admin": {
+			"title": "[{displayId}] Booking is paid by customer successfully",
+			"message": "The booking {displayId} has been paid {amount} by customer successfully"
+		}
+	},
+	"announcement": {
+		"title": "Announcement",
+		"message": "{message}"
+	},
+	"wallet": {
+		"withdrawal_request_approved": {
+			"title": "Withdrawal Request Approved",
+			"message": "Ang iyong kahilingan sa pag-withdraw ay naaprubahan ng admin.."
+		},
+		"withdrawal_request_rejected": {
+			"title": "Withdrawal Request Rejected",
+			"message": "Ang iyong kahilingan sa pag-withdraw ay hindi naaprubahan ng admin."
+		}
+	}
+}
