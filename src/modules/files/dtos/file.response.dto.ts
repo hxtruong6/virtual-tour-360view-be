@@ -9,4 +9,10 @@ export class FileResponseUploadDto {
 
 	@StringField()
 	url?: string;
+
+	@StringFieldOptional()
+	thumbnailFilePath?: string;
+
+	@StringFieldOptional()
+	mediaFileId?: string;
 }

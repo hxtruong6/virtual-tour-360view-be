@@ -73,11 +73,12 @@ CREATE TABLE "app"."virtual_tours" (
     "total_scenes" INTEGER NOT NULL DEFAULT 0,
     "total_hotspots" INTEGER NOT NULL DEFAULT 0,
     "estimated_duration" INTEGER,
+    "apartment_metadata" JSONB,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "published_at" TIMESTAMP(3),
     "deleted_at" TIMESTAMP(3),
-    "created_by_id" TEXT NOT NULL,
+    "created_by_id" TEXT,
     "updated_by_id" TEXT,
 
     CONSTRAINT "virtual_tours_pkey" PRIMARY KEY ("id")
@@ -146,6 +147,9 @@ CREATE TABLE "app"."media_files" (
     "compressed_path" TEXT,
     "storage_provider" TEXT DEFAULT 'local',
     "external_url" TEXT,
+    "gallery_category" TEXT,
+    "gallery_subcategory" TEXT,
+    "display_order" INTEGER DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "deleted_at" TIMESTAMP(3),
@@ -313,6 +317,34 @@ CREATE TABLE "app"."tour_embeds" (
     CONSTRAINT "tour_embeds_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "app"."amenities" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "category" TEXT NOT NULL,
+    "icon_name" TEXT,
+    "image_url" TEXT,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "display_order" INTEGER NOT NULL DEFAULT 0,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "deleted_at" TIMESTAMP(3),
+
+    CONSTRAINT "amenities_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "app"."tour_amenities" (
+    "id" TEXT NOT NULL,
+    "tour_id" TEXT NOT NULL,
+    "amenity_id" TEXT NOT NULL,
+    "is_featured" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "tour_amenities_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "app"."users"("email");
 
@@ -387,6 +419,12 @@ CREATE INDEX "media_files_status_idx" ON "app"."media_files"("status");
 
 -- CreateIndex
 CREATE INDEX "media_files_uploaded_by_id_idx" ON "app"."media_files"("uploaded_by_id");
+
+-- CreateIndex
+CREATE INDEX "media_files_gallery_category_idx" ON "app"."media_files"("gallery_category");
+
+-- CreateIndex
+CREATE INDEX "media_files_display_order_idx" ON "app"."media_files"("display_order");
 
 -- CreateIndex
 CREATE INDEX "scene_media_scene_id_idx" ON "app"."scene_media"("scene_id");
@@ -511,8 +549,26 @@ CREATE INDEX "tour_embeds_tour_id_idx" ON "app"."tour_embeds"("tour_id");
 -- CreateIndex
 CREATE INDEX "tour_embeds_domain_idx" ON "app"."tour_embeds"("domain");
 
+-- CreateIndex
+CREATE INDEX "amenities_category_idx" ON "app"."amenities"("category");
+
+-- CreateIndex
+CREATE INDEX "amenities_is_active_idx" ON "app"."amenities"("is_active");
+
+-- CreateIndex
+CREATE INDEX "amenities_display_order_idx" ON "app"."amenities"("display_order");
+
+-- CreateIndex
+CREATE INDEX "tour_amenities_tour_id_idx" ON "app"."tour_amenities"("tour_id");
+
+-- CreateIndex
+CREATE INDEX "tour_amenities_amenity_id_idx" ON "app"."tour_amenities"("amenity_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "tour_amenities_tour_id_amenity_id_key" ON "app"."tour_amenities"("tour_id", "amenity_id");
+
 -- AddForeignKey
-ALTER TABLE "app"."virtual_tours" ADD CONSTRAINT "virtual_tours_created_by_id_fkey" FOREIGN KEY ("created_by_id") REFERENCES "app"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "app"."virtual_tours" ADD CONSTRAINT "virtual_tours_created_by_id_fkey" FOREIGN KEY ("created_by_id") REFERENCES "app"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "app"."virtual_tours" ADD CONSTRAINT "virtual_tours_updated_by_id_fkey" FOREIGN KEY ("updated_by_id") REFERENCES "app"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -585,3 +641,9 @@ ALTER TABLE "app"."api_keys" ADD CONSTRAINT "api_keys_user_id_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "app"."tour_embeds" ADD CONSTRAINT "tour_embeds_tour_id_fkey" FOREIGN KEY ("tour_id") REFERENCES "app"."virtual_tours"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "app"."tour_amenities" ADD CONSTRAINT "tour_amenities_tour_id_fkey" FOREIGN KEY ("tour_id") REFERENCES "app"."virtual_tours"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "app"."tour_amenities" ADD CONSTRAINT "tour_amenities_amenity_id_fkey" FOREIGN KEY ("amenity_id") REFERENCES "app"."amenities"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseDto } from '../../../../common/dto/abstract.dto';
 import { type PageMetaDto } from '../../../../common/dto/page-meta.dto';
 import { PageDto } from '../../../../common/dto/page.dto';
+import { IApartmentMetadata } from '../../../../core/types/apartment.types';
 import {
 	BooleanField,
 	DateFieldOptional,
@@ -16,11 +17,13 @@ import {
 import {
 	Hotspot,
 	HotspotType,
+	Prisma,
 	Scene,
 	TourDifficulty,
 	TourStatus,
 	VirtualTour,
 } from '../../../../generated/prisma';
+import { TourAmenityDto } from '../../amenities/dto/amenity.response.dto';
 
 export class VirtualTourListResponseDto extends PageDto<VirtualTourDto> {
 	constructor(data: VirtualTourDto[], meta: PageMetaDto) {
@@ -177,6 +180,39 @@ export class VirtualTourDto extends BaseDto {
 		example: 12,
 	})
 	readonly estimatedDuration?: number;
+
+	@ApiProperty({
+		required: false,
+		nullable: true,
+		description: 'Apartment metadata including type and specifications',
+		example: {
+			type: {
+				id: 'studio',
+				name: 'Studio',
+				unitCount: 1496,
+				areaRange: '29.2 - 35 m²',
+				description: 'Căn hộ studio hiện đại',
+				hasSubLevels: false,
+				expectedHotspots: ['Phòng khách', 'Toilet'],
+			},
+			specifications: {
+				bedrooms: 0,
+				bathrooms: 1,
+				area: 32,
+				floor: '15',
+				view: 'City View',
+				balcony: true,
+			},
+		},
+	})
+	readonly apartmentMetadata?: Prisma.JsonValue | null;
+
+	@ApiProperty({
+		required: false,
+		description: 'Tour amenities',
+		type: [TourAmenityDto],
+	})
+	readonly amenities?: TourAmenityDto[];
 
 	@DateFieldOptional({
 		description: 'Publication date',

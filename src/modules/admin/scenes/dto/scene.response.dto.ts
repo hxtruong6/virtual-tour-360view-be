@@ -59,18 +59,61 @@ export class SceneDto {
 	}
 }
 
-interface IHotspot {
-	id: string;
-	type: string;
-	title: string;
-	// Add more fields as needed when hotspot DTOs are created
+export class SceneHotspotDto {
+	@UUIDField()
+	id!: string;
+
+	@StringField()
+	type!: string;
+
+	@StringField()
+	title!: string;
+
+	@StringFieldOptional()
+	description?: string;
+
+	@NumberFieldOptional()
+	positionX!: number;
+
+	@NumberFieldOptional()
+	positionY!: number;
+
+	@NumberFieldOptional()
+	positionZ!: number;
+
+	@StringFieldOptional()
+	iconUrl?: string;
+
+	@StringFieldOptional()
+	iconColor?: string;
+
+	@NumberFieldOptional()
+	iconSize?: number;
+
+	@StringFieldOptional()
+	targetSceneId?: string;
+
+	@StringFieldOptional()
+	animationType?: string;
+
+	@NumberFieldOptional()
+	animationSpeed?: number;
+
+	@DateField()
+	createdAt!: Date;
+
+	@DateField()
+	updatedAt!: Date;
 }
 
 export class SceneWithHotspotsDto extends SceneDto {
-	@ApiProperty({ description: 'Hotspots in this scene', type: [Object] })
-	hotspots!: IHotspot[]; // Will be properly typed when hotspot DTOs are created
+	@ApiProperty({
+		description: 'Hotspots in this scene',
+		type: [SceneHotspotDto],
+	})
+	hotspots!: SceneHotspotDto[];
 
-	constructor(scene: SceneEntity, hotspots: IHotspot[] = []) {
+	constructor(scene: SceneEntity, hotspots: SceneHotspotDto[] = []) {
 		super(scene);
 		this.hotspots = hotspots;
 	}

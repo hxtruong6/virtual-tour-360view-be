@@ -6,8 +6,8 @@
 	"private": true,
 	"license": "MIT",
 	"scripts": {
-		"build:prod": "rm -rf src/metadata.ts && rm -rf dist && cross-env NODE_ENV=production pnpm install && cross-env NODE_ENV=production nest build && pnpm run migrations:prod && redis-cli FLUSHALL",
-		"build:dev": "rm -rf src/metadata.ts && rm -rf dist && cross-env NODE_ENV=development pnpm install && cross-env NODE_ENV=development nest build && pnpm run migrations:dev && redis-cli FLUSHALL",
+		"build:prod": "rm -rf src/metadata.ts && rm -rf dist && cross-env NODE_ENV=production pnpm install && npx prisma migrate deploy && cross-env NODE_ENV=production nest build",
+		"build:dev": "rm -rf src/metadata.ts && rm -rf dist && cross-env NODE_ENV=development pnpm install && npx prisma migrate deploy && cross-env NODE_ENV=development nest build",
 		"start:dev": "nest start --watch",
 		"start:staging": "NODE_ENV=staging nest start --watch",
 		"start:prod": "NODE_ENV=production node dist/main.js",
@@ -202,7 +202,7 @@
 		"testEnvironment": "node"
 	},
 	"prisma": {
-		"seed": "npx tsx prisma/seed.ts"
+		"seed": "npx ts-node prisma/seed.ts"
 	},
 	"engines": {
 		"node": ">=20.0.0"

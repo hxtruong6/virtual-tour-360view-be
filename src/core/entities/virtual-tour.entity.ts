@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import {
+	Prisma,
 	TourDifficulty,
 	TourStatus,
 	VirtualTour,
@@ -98,6 +99,33 @@ export class VirtualTourEntity implements VirtualTour {
 
 	@ApiProperty({ required: false, nullable: true })
 	deletedAt!: Date | null;
+
+	// Apartment metadata
+	@ApiProperty({
+		required: false,
+		nullable: true,
+		description: 'Apartment type and specifications metadata',
+		example: {
+			type: {
+				id: 'studio',
+				name: 'Studio',
+				unitCount: 1496,
+				areaRange: '29.2 - 35 m²',
+				description: 'Căn hộ studio hiện đại',
+				hasSubLevels: false,
+				expectedHotspots: ['Phòng khách', 'Toilet'],
+			},
+			specifications: {
+				bedrooms: 0,
+				bathrooms: 1,
+				area: 32,
+				floor: '15',
+				view: 'City View',
+				balcony: true,
+			},
+		},
+	})
+	apartmentMetadata!: Prisma.JsonValue | null;
 
 	// Foreign keys
 	@ApiProperty()

@@ -2,15 +2,20 @@ import { Injectable, Logger } from '@nestjs/common';
 import { nanoid } from 'nanoid';
 import path from 'node:path';
 
+import { EMediaType } from '../../common/constants/app-type';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { FileRequestUploadDto } from './dtos/file.request.dto';
 import { FileResponseUploadDto } from './dtos/file.response.dto';
+import { ICreateMediaFileDto, MediaFileService } from './media-file.service';
 
 @Injectable()
 export class FileService {
 	private readonly logger = new Logger(FileService.name);
 
-	constructor(private readonly localStorageService: LocalStorageService) {}
+	constructor(
+		private readonly localStorageService: LocalStorageService,
+		private readonly mediaFileService: MediaFileService,
+	) {}
 
 	generateFileName(file: Express.Multer.File): string {
 		const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
@@ -50,9 +55,59 @@ export class FileService {
 		return fileName;
 	}
 
+	async createMediaFiles(
+		fileToUploads: Express.Multer.File[],
+		filePaths: string[],
+		uploadedById?: string,
+	) {
+		const mediaFileIds: string[] = [];
+
+		try {
+			for (const [index, file] of fileToUploads.entries()) {
+				const mediaType = this.mediaFileService.determineMediaType(
+					file.mimetype,
+				);
+
+				const createMediaFileData: ICreateMediaFileDto = {
+					originalName: file.originalname || 'unknown',
+					fileName: path.basename(filePaths[index]),
+					filePath: filePaths[index],
+					fileSize: file.size,
+					mimeType: file.mimetype,
+					mediaType,
+					uploadedById,
+					storageProvider: 'local',
+				};
+
+				const mediaFile =
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-await-in-loop
+					await this.mediaFileService.createMediaFile(createMediaFileData);
+
+				mediaFileIds.push(mediaFile.id);
+
+				// Mark as ready after successful upload
+				// eslint-disable-next-line no-await-in-loop
+				await this.mediaFileService.markAsReady(
+					mediaFile.id,
+					'File uploaded successfully',
+				);
+			}
+
+			return mediaFileIds;
+		} catch (error) {
+			this.logger.error('Failed to create media file records:', error);
+			await Promise.all(
+				mediaFileIds.map((id) =>
+					this.mediaFileService.markAsFailed(id, 'File uploaded failed'),
+				),
+			);
+		}
+	}
+
 	async handleUpload(
 		data: FileRequestUploadDto,
 		isUrl: boolean,
+		uploadedById?: string,
 	): Promise<{ message: string; files: FileResponseUploadDto[] }> {
 		const { files } = data;
 
@@ -82,17 +137,27 @@ export class FileService {
 		// Make sure keep same file extension using the proper generateFileName method
 		const filePaths = fileToUploads.map((file) => this.generateFileName(file));
 
-		await this.localStorageService.uploadFiles(
-			filePaths.map((filePath, index) => ({
-				key: filePath,
-				file: fileToUploads[index].buffer,
-				contentType: fileToUploads[index].mimetype,
-			})),
-		);
+		// Check if isCreateThumbnail is true
+		// if (data.isCreateThumbnail) {
+		// 	// Create thumbnail
+		// 	const thumbnailFilePath = this.generateThumbnailFileName(filePaths[0]);
+		// 	filePaths.push(thumbnailFilePath);
+		// }
+
+		const [uploadedFilePaths, mediaFileIds] = await Promise.all([
+			this.localStorageService.uploadFiles(
+				filePaths.map((filePath, index) => ({
+					key: filePath,
+					file: fileToUploads[index].buffer,
+					contentType: fileToUploads[index].mimetype,
+				})),
+			),
+			this.createMediaFiles(fileToUploads, filePaths, uploadedById),
+		]);
 
 		// Handle multiple files
 		const responseFiles = await Promise.all(
-			filePaths.map(async (filePath) => {
+			filePaths.map(async (filePath, index) => {
 				const response: FileResponseUploadDto = {
 					filePath,
 				};
@@ -100,6 +165,15 @@ export class FileService {
 				if (isUrl) {
 					response.url = await this.localStorageService.getFileUrl(filePath);
 				}
+
+				if (mediaFileIds?.[index]) {
+					response.mediaFileId = mediaFileIds[index];
+				}
+
+				// if (data.isCreateThumbnail) {
+				// 	response.thumbnailFilePath =
+				// 		await this.localStorageService.getFileUrl(thumbnailFilePath);
+				// }
 
 				return response;
 			}),

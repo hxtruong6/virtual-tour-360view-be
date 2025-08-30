@@ -15,7 +15,8 @@ import { FormDataRequest } from 'nestjs-form-data';
 import path from 'node:path';
 
 import { EVersion } from '../../common/constants';
-import { Auth } from '../../decorators';
+import { AuthenUser } from '../../core/entities';
+import { Auth, AuthUser } from '../../decorators';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { FileRequestUploadDto } from './dtos/file.request.dto';
 import { FileResponseUploadDto } from './dtos/file.response.dto';
@@ -70,6 +71,7 @@ export class FilesController {
 	async uploadFiles(
 		@Body() dataDto: FileRequestUploadDto,
 		@Query('isUrl') isUrl = false,
+		@AuthUser() user?: AuthenUser,
 	): Promise<{
 		message: string;
 		files: FileResponseUploadDto[];
@@ -81,6 +83,6 @@ export class FilesController {
 			throw new BadRequestException('Files is required');
 		}
 
-		return this.fileService.handleUpload(dataDto, isUrl);
+		return this.fileService.handleUpload(dataDto, isUrl, user?.id);
 	}
 }

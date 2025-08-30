@@ -188,6 +188,7 @@ export enum EMediaType {
 	VIDEO = 'VIDEO',
 	AUDIO = 'AUDIO',
 	DOCUMENT = 'DOCUMENT',
+	UNDEFINED = 'UNDEFINED',
 }
 
 export enum EMediaStatus {

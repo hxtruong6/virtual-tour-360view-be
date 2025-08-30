@@ -12,3 +12,17 @@ export const SCENE_ORDER_BY = {
 	createdAt: 'createdAt',
 	updatedAt: 'updatedAt',
 };
+
+export const HOTSPOT_QUERY_BY = {
+	title: 'title',
+	description: 'description',
+	type: 'type',
+};
+
+export const HOTSPOT_ORDER_BY = {
+	title: 'title',
+	description: 'description',
+	type: 'type',
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
+};

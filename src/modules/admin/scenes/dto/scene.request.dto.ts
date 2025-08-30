@@ -41,8 +41,8 @@ export class CreateSceneDto {
 	@StringField({ maxLength: 500, description: 'Panorama image URL' })
 	panoramaUrl!: string;
 
-	@StringField({ maxLength: 500, description: 'Thumbnail image URL' })
-	thumbnailUrl!: string;
+	@StringFieldOptional({ maxLength: 500, description: 'Thumbnail image URL' })
+	thumbnailUrl?: string;
 
 	// Scene positioning (for map integration)
 	@NumberFieldOptional({

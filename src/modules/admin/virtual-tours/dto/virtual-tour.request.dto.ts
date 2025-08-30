@@ -1,7 +1,8 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsArray, IsObject, IsOptional, IsString } from 'class-validator';
 
 import { PageOptionsDto } from '../../../../common/dto/page-options.dto';
+import { IApartmentMetadata } from '../../../../core/types/apartment.types';
 import {
 	BooleanFieldOptional,
 	EnumFieldOptional,
@@ -26,6 +27,22 @@ export class VirtualTourRequestDto extends PageOptionsDto {
 		description: 'Filter by category',
 	})
 	readonly category?: string;
+
+	@StringFieldOptional({
+		description: 'Filter by apartment type',
+		example: 'studio',
+	})
+	readonly apartmentType?: string;
+
+	@ApiPropertyOptional({
+		description: 'Filter by amenities (comma-separated IDs)',
+		type: [String],
+		example: ['amenity-id-1', 'amenity-id-2'],
+	})
+	@IsOptional()
+	@IsArray()
+	@IsString({ each: true })
+	readonly amenities?: string[];
 
 	@EnumFieldOptional(() => TourDifficulty, {
 		description: 'Filter by difficulty level',
@@ -158,6 +175,44 @@ export class CreateVirtualTourDto {
 		max: 120,
 	})
 	readonly estimatedDuration?: number;
+
+	@ApiProperty({
+		required: false,
+		description: 'Apartment metadata including type and specifications',
+		example: {
+			type: {
+				id: 'studio',
+				name: 'Studio',
+				unitCount: 1496,
+				areaRange: '29.2 - 35 m²',
+				description: 'Căn hộ studio hiện đại',
+				hasSubLevels: false,
+				expectedHotspots: ['Phòng khách', 'Toilet'],
+			},
+			specifications: {
+				bedrooms: 0,
+				bathrooms: 1,
+				area: 32,
+				floor: '15',
+				view: 'City View',
+				balcony: true,
+			},
+		},
+	})
+	@IsOptional()
+	@IsObject()
+	readonly apartmentMetadata?: IApartmentMetadata;
+
+	@ApiProperty({
+		required: false,
+		description: 'Array of amenity IDs to assign to this tour',
+		type: [String],
+		example: ['amenity-id-1', 'amenity-id-2'],
+	})
+	@IsOptional()
+	@IsArray()
+	@IsString({ each: true })
+	readonly amenityIds?: string[];
 }
 
 export class UpdateVirtualTourDto {
@@ -256,4 +311,42 @@ export class UpdateVirtualTourDto {
 		max: 120,
 	})
 	readonly estimatedDuration?: number;
+
+	@ApiProperty({
+		required: false,
+		description: 'Apartment metadata including type and specifications',
+		example: {
+			type: {
+				id: 'studio',
+				name: 'Studio',
+				unitCount: 1496,
+				areaRange: '29.2 - 35 m²',
+				description: 'Căn hộ studio hiện đại',
+				hasSubLevels: false,
+				expectedHotspots: ['Phòng khách', 'Toilet'],
+			},
+			specifications: {
+				bedrooms: 0,
+				bathrooms: 1,
+				area: 32,
+				floor: '15',
+				view: 'City View',
+				balcony: true,
+			},
+		},
+	})
+	@IsOptional()
+	@IsObject()
+	readonly apartmentMetadata?: IApartmentMetadata;
+
+	@ApiProperty({
+		required: false,
+		description: 'Array of amenity IDs to assign to this tour',
+		type: [String],
+		example: ['amenity-id-1', 'amenity-id-2'],
+	})
+	@IsOptional()
+	@IsArray()
+	@IsString({ each: true })
+	readonly amenityIds?: string[];
 }

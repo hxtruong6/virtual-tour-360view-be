@@ -4,10 +4,10 @@ This document tracks the implementation status of all API endpoints and features
 
 ## 📊 **Overall Progress**
 
-- **Completed:** 14 endpoints ✅
+- **Completed:** 18 endpoints ✅
 - **In Progress:** 1 endpoint 🚧
-- **Not Started:** 85+ endpoints ❌
-- **Current Focus:** Admin Authentication & Virtual Tours Management
+- **Not Started:** 81+ endpoints ❌
+- **Current Focus:** Admin Authentication, Virtual Tours & Hotspot Management
 
 ---
 
@@ -41,16 +41,13 @@ This document tracks the implementation status of all API endpoints and features
 
 ### 2.1 Public Tour Access
 
-- ❌ `GET /public/tours` - Get Published Tours (Public)
-- ❌ `GET /public/tours/{slug}` - Get Tour by Slug (Public)
-
-### 2.2 Authenticated Tour Management
-
-- ❌ `GET /public/tours` - Get User's Tours
-- ❌ `POST /public/tours` - Create Tour
-- ❌ `PATCH /public/tours/{tourId}` - Update Tour
-- ❌ `DELETE /public/tours/{tourId}` - Delete Tour
-- ❌ `POST /public/tours/{tourId}/thumbnail` - Upload Tour Thumbnail
+- ❌ `GET /api/v1/public/tours` - Get Published Tours (Public)
+- ❌ `GET /api/v1/public/tours/{slug}` - Get Tour by Slug (Public)
+- [ ] List All Amenities: `GET /api/v1/public/amenities`
+- [ ] Filter Tour by Amenities: `GET /api/v1/public/tours?amenities=amenity-id-1,amenity-id-2`
+- [ ] Filter Tour by Room Category: `GET /api/v1/public/tours?room_types=studio,1pn,2pn,3pn,sv`
+- [ ] Get list visual galleries: `GET /api/v1/public/visual-galleries`
+- [ ] Get collection of tours by visual gallery id: `GET /api/v1/public/tours?gallery_ids=gallery-id-1,gallery-id-2`
 
 ### 2.3 Admin Tour Management
 
@@ -83,10 +80,10 @@ This document tracks the implementation status of all API endpoints and features
 
 ### 4.1 Hotspot Management
 
-- ❌ `GET /admin/tours/{tourId}/scenes/{sceneId}/hotspots` - Get Scene Hotspots
-- ❌ `POST /admin/tours/{tourId}/scenes/{sceneId}/hotspots` - Create Hotspot
-- ❌ `PUT /admin/tours/{tourId}/scenes/{sceneId}/hotspots/{hotspotId}` - Update Hotspot
-- ❌ `DELETE /admin/tours/{tourId}/scenes/{sceneId}/hotspots/{hotspotId}` - Delete Hotspot
+- ✅ `GET /admin/tours/{tourId}/scenes/{sceneId}/hotspots` - Get Scene Hotspots
+- ✅ `POST /admin/tours/{tourId}/scenes/{sceneId}/hotspots` - Create Hotspot
+- ✅ `PUT /admin/tours/{tourId}/scenes/{sceneId}/hotspots/{hotspotId}` - Update Hotspot
+- ✅ `DELETE /admin/tours/{tourId}/scenes/{sceneId}/hotspots/{hotspotId}` - Delete Hotspot
 
 ---
 
@@ -94,10 +91,8 @@ This document tracks the implementation status of all API endpoints and features
 
 ### 5.1 File Upload
 
-- ❌ `POST /admin/media/upload` - Upload Media File
-- ❌ `GET /admin/media/{mediaId}` - Get Media File
-- ❌ `DELETE /admin/media/{mediaId}` - Delete Media File
-- ❌ `GET /admin/media` - Get User Media Files
+- ✅ `POST /api/v1/files/upload` - Upload Media File
+- [x] {{url}}/uploads/{{filePath1}} - View by public
 
 ---
 
@@ -198,7 +193,7 @@ This document tracks the implementation status of all API endpoints and features
 - ✅ Virtual tour DTOs (CRUD operations)
 - ✅ Scene DTOs (CRUD operations, bulk actions)
 - ❌ User auth DTOs
-- ❌ Hotspot DTOs
+- ✅ Hotspot DTOs
 - ❌ Media upload DTOs
 - ❌ Analytics DTOs
 
@@ -218,23 +213,25 @@ This document tracks the implementation status of all API endpoints and features
 1. Admin authentication system with Prisma integration
 2. Virtual tours CRUD operations (admin panel)
 3. Scene management CRUD operations (admin panel)
-4. Database seeding for admin user
-5. JWT token validation for admin routes
-6. DTOs aligned with Prisma entities with proper pagination
-7. Bulk scene operations and reordering functionality
+4. Hotspot management CRUD operations (admin panel)
+5. Database seeding for admin user
+6. JWT token validation for admin routes
+7. DTOs aligned with Prisma entities with proper pagination
+8. Bulk scene operations and reordering functionality
+9. Scene-hotspot relationship integration
 
 ### 🚧 **In Progress:**
 
 1. Code quality improvements and linting fixes
-2. Testing scene management endpoints
+2. Testing scene and hotspot management endpoints
 
 ### 📋 **Next Sprint Priorities:**
 
-1. **Hotspot Management** - Interactive hotspots within scenes
-2. **Media Upload** - Panorama image upload and processing
-3. **Public Virtual Tours API** - Allow public access to published tours
-4. **User Registration & Authentication** - Non-admin user system
-5. **Analytics** - Basic tracking for tours and scenes
+1. **Media Upload** - Panorama image upload and processing
+2. **Public Virtual Tours API** - Allow public access to published tours
+3. **User Registration & Authentication** - Non-admin user system
+4. **Analytics** - Basic tracking for tours and scenes
+5. **Advanced Hotspot Features** - Media attachments and complex interactions
 
 ---
 
@@ -245,6 +242,7 @@ This document tracks the implementation status of all API endpoints and features
 - ✅ Admin login endpoint tested
 - ✅ Virtual tours CRUD operations tested
 - 🚧 Scene management CRUD operations (ready for testing)
+- 🚧 Hotspot management CRUD operations (ready for testing)
 - ❌ Public tours access
 - ❌ File upload functionality
 - ❌ User registration flow
@@ -331,6 +329,14 @@ Authorization: Bearer <token>
 
 # Create Scene
 POST /api/v1/admin/tours/{tourId}/scenes
+Authorization: Bearer <token>
+
+# Get Scene Hotspots
+GET /api/v1/admin/tours/{tourId}/scenes/{sceneId}/hotspots
+Authorization: Bearer <token>
+
+# Create Hotspot
+POST /api/v1/admin/tours/{tourId}/scenes/{sceneId}/hotspots
 Authorization: Bearer <token>
 ```
 

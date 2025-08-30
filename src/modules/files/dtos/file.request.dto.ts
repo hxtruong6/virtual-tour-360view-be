@@ -8,6 +8,8 @@ import {
 	MinFileSize,
 } from 'nestjs-form-data';
 
+import { BooleanFieldOptional } from '../../../decorators/field.decorators';
+
 export class SingleFileRequestUploadDto {
 	@IsFile()
 	@MaxFileSize(1 * 1024 * 1024 * 1024) // 1GB MB
@@ -31,4 +33,10 @@ export class SingleFileRequestUploadDto {
 export class FileRequestUploadDto {
 	@IsFiles({ each: true, message: 'Files must be an array' })
 	files!: Express.Multer.File[];
+
+	@BooleanFieldOptional({
+		description: 'Is create thumbnail',
+		example: false,
+	})
+	isCreateThumbnail?: boolean;
 }

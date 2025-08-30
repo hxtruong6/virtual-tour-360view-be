@@ -8,8 +8,9 @@ import { ADMIN_USER_ID, EOrder } from '../../../common/constants';
 import { PageMetaDto } from '../../../common/dto/page-meta.dto';
 import { generateSlug } from '../../../common/utils';
 import { AuthenUser } from '../../../core/entities';
-import { TourStatus } from '../../../generated/prisma';
+import { Prisma, TourStatus } from '../../../generated/prisma';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { AmenitiesUseCase } from '../amenities/amenities.use-case';
 import {
 	CreateVirtualTourDto,
 	UpdateVirtualTourDto,
@@ -23,7 +24,10 @@ import {
 
 @Injectable()
 export class VirtualToursUseCase {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private prisma: PrismaService,
+		private amenitiesUseCase: AmenitiesUseCase,
+	) {}
 
 	async getVirtualTours(
 		query: VirtualTourRequestDto,
@@ -85,6 +89,25 @@ export class VirtualToursUseCase {
 			where.createdById = query.createdById;
 		}
 
+		// Filter by apartment type
+		if (query.apartmentType) {
+			where.apartmentMetadata = {
+				path: ['type', 'id'],
+				equals: query.apartmentType,
+			};
+		}
+
+		// Filter by amenities - tours that have any of the specified amenities
+		if (query.amenities && query.amenities.length > 0) {
+			where.amenities = {
+				some: {
+					amenityId: {
+						in: query.amenities,
+					},
+				},
+			};
+		}
+
 		// Build orderBy
 		const orderBy: Record<string, EOrder> = {};
 		const sortBy = 'createdAt'; // Default sort field
@@ -135,6 +158,15 @@ export class VirtualToursUseCase {
 							},
 						},
 					},
+				},
+				amenities: {
+					include: {
+						amenity: true,
+					},
+					orderBy: [
+						{ isFeatured: 'desc' },
+						{ amenity: { displayOrder: 'asc' } },
+					],
 				},
 			},
 		});
@@ -190,10 +222,21 @@ export class VirtualToursUseCase {
 				totalScenes: 0,
 				totalHotspots: 0,
 				estimatedDuration: createDto.estimatedDuration,
+				apartmentMetadata: createDto.apartmentMetadata as
+					| Prisma.JsonValue
+					| undefined,
 				createdById: user.id,
 				updatedById: user.id,
 			},
 		});
+
+		// Handle amenities assignment if provided
+		if (createDto.amenityIds && createDto.amenityIds.length > 0) {
+			await this.amenitiesUseCase.assignAmenitiesToTour(tour.id, {
+				amenityIds: createDto.amenityIds,
+				featuredAmenityIds: [],
+			});
+		}
 
 		return new VirtualTourDto(tour);
 	}
@@ -205,10 +248,7 @@ export class VirtualToursUseCase {
 	): Promise<VirtualTourDto> {
 		// Check if tour exists
 		const existingTour = await this.prisma.virtualTour.findFirst({
-			where: {
-				id,
-				deletedAt: null,
-			},
+			where: { id, deletedAt: null },
 		});
 
 		if (!existingTour) {
@@ -299,10 +339,34 @@ export class VirtualToursUseCase {
 			delete updateData.estimatedDuration;
 		}
 
+		if (updateDto.apartmentMetadata !== undefined) {
+			updateData.apartmentMetadata = updateDto.apartmentMetadata;
+			delete updateData.apartmentMetadata;
+		}
+
+		// Handle amenities separately since it requires special handling
+		const amenityIds = updateDto.amenityIds;
+		delete updateData.amenityIds;
+
 		const updatedTour = await this.prisma.virtualTour.update({
 			where: { id },
 			data: updateData,
 		});
+
+		// Handle amenities assignment if provided
+		// if (amenityIds !== undefined) {
+		// 	if (amenityIds.length > 0) {
+		// 		await this.amenitiesUseCase.assignAmenitiesToTour(id, {
+		// 			amenityIds,
+		// 			featuredAmenityIds: [],
+		// 		});
+		// 	} else {
+		// 		// Remove all amenities if empty array is provided
+		// 		await this.prisma.tourAmenity.deleteMany({
+		// 			where: { tourId: id },
+		// 		});
+		// 	}
+		// }
 
 		return new VirtualTourDto(updatedTour);
 	}

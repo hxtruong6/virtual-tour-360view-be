@@ -23,6 +23,7 @@ import {
 import {
 	BulkSceneResponseDto,
 	SceneDto,
+	SceneHotspotDto,
 	SceneListResponseDto,
 	SceneWithHotspotsDto,
 } from './dto/scene.response.dto';
@@ -124,10 +125,22 @@ export class ScenesUseCase {
 			throw new NotFoundException('Scene not found');
 		}
 
-		// For now, return empty hotspots array - will be implemented when hotspot management is ready
-		const hotspots: Array<{ id: string; type: string; title: string }> = [];
+		// Fetch hotspots for this scene
+		const hotspots = await this.prisma.hotspot.findMany({
+			where: {
+				sceneId,
+				deletedAt: null,
+			},
+			orderBy: {
+				createdAt: 'asc',
+			},
+		});
 
-		return new SceneWithHotspotsDto(scene as SceneEntity, hotspots);
+		return new SceneWithHotspotsDto(
+			scene as SceneEntity,
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+			hotspots as unknown[] as SceneHotspotDto[], // Will be properly typed as SceneHotspotDto[]
+		);
 	}
 
 	async createScene(
