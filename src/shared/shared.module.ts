@@ -2,6 +2,7 @@ import { Global, Module, type Provider } from '@nestjs/common';
 
 import { ApiConfigService } from './services/api-config.service';
 import { GeneratorService } from './services/generator.service';
+import { LocalStorageService } from './services/local-storage.service';
 import { RequestContextService } from './services/request-context.service';
 import { TranslationService } from './services/translation.service';
 import { ValidatorService } from './services/validator.service';
@@ -15,6 +16,7 @@ const providers: Provider[] = [
 	// SMSService,
 	// EmailService,
 	RequestContextService,
+	LocalStorageService,
 	// CacheService,
 	// GcloudStorageService,
 ];

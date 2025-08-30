@@ -85,7 +85,7 @@ This document tracks the implementation status of all API endpoints and features
 
 - ❌ `GET /admin/tours/{tourId}/scenes/{sceneId}/hotspots` - Get Scene Hotspots
 - ❌ `POST /admin/tours/{tourId}/scenes/{sceneId}/hotspots` - Create Hotspot
-- ❌ `PATCH /admin/tours/{tourId}/scenes/{sceneId}/hotspots/{hotspotId}` - Update Hotspot
+- ❌ `PUT /admin/tours/{tourId}/scenes/{sceneId}/hotspots/{hotspotId}` - Update Hotspot
 - ❌ `DELETE /admin/tours/{tourId}/scenes/{sceneId}/hotspots/{hotspotId}` - Delete Hotspot
 
 ---
@@ -112,7 +112,7 @@ This document tracks the implementation status of all API endpoints and features
 ### 6.2 Ratings
 
 - ❌ `POST /admin/tours/{tourId}/rating` - Rate Tour
-- ❌ `PATCH /admin/tours/{tourId}/rating` - Update Rating
+- ❌ `PUT /admin/tours/{tourId}/rating` - Update Rating
 - ❌ `GET /admin/tours/{tourId}/ratings` - Get Tour Ratings
 
 ---
@@ -125,24 +125,6 @@ This document tracks the implementation status of all API endpoints and features
 - ❌ `POST /admin/tours/{tourId}/view` - Track Tour View
 - ❌ `POST /admin/tours/{tourId}/scenes/{sceneId}/view` - Track Scene View
 - ❌ `POST /admin/tours/{tourId}/scenes/{sceneId}/hotspots/{hotspotId}/click` - Track Hotspot Click
-
----
-
-## 8. **Internationalization API**
-
-### 8.1 Tour Translations
-
-- ❌ `GET /admin/tours/{tourId}/translations` - Get Tour Translations
-- ❌ `PUT /admin/tours/{tourId}/translations/{language}` - Create/Update Tour Translation
-- ❌ `DELETE /admin/tours/{tourId}/translations/{language}` - Delete Tour Translation
-
-### 8.2 Scene Translations
-
-- ❌ `PUT /admin/tours/{tourId}/scenes/{sceneId}/translations/{language}` - Create/Update Scene Translation
-
-### 8.3 Hotspot Translations
-
-- ❌ `PUT /admin/tours/{tourId}/scenes/{sceneId}/hotspots/{hotspotId}/translations/{language}` - Create/Update Hotspot Translation
 
 ---
 

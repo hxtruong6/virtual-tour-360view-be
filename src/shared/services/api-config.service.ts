@@ -220,4 +220,10 @@ export class ApiConfigService {
 			fromName: this.getString('SMTP_FROM_NAME'),
 		};
 	}
+
+	get serverStorageFolderConfig() {
+		return {
+			folderName: this.getString('SERVER_STORAGE_FOLDER_NAME'),
+		};
+	}
 }
