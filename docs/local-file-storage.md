@@ -46,7 +46,7 @@ SERVER_STORAGE_FOLDER_NAME=./uploads
   "files": [
     {
       "filePath": "2025-01-15/abc123.jpg",
-      "url": "/api/v1/files/serve/2025-01-15/abc123.jpg" // Only if isUrl=true
+      "url": "/uploads/2025-01-15/abc123.jpg" // Only if isUrl=true
     }
   ]
 }
@@ -63,17 +63,20 @@ SERVER_STORAGE_FOLDER_NAME=./uploads
 
 ```json
 {
-  "url": "/api/v1/files/serve/2025-01-15/abc123.jpg"
+  "url": "/uploads/2025-01-15/abc123.jpg"
 }
 ```
 
-### 3. Serve Files
+### 3. Serve Files (Static)
 
-**GET** `/api/v1/files/serve/{filePath}`
+**GET** `/uploads/{filePath}`
 
-- **Description**: Serve uploaded files directly
-- **Authentication**: Public endpoint
-- **Example**: `GET /api/v1/files/serve/2025-01-15/abc123.jpg`
+- **Description**: Serve uploaded files directly using NestJS ServeStaticModule
+- **Authentication**: Public endpoint  
+- **Example**: `GET /uploads/2025-01-15/abc123.jpg`
+
+**Alternative Endpoint:**
+**GET** `/api/v1/files/serve/{filePath}` (Backup controller endpoint)
 
 ## File Organization
 

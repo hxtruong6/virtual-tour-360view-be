@@ -2,6 +2,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ClsModule } from 'nestjs-cls';
 import { NestjsFormDataModule } from 'nestjs-form-data';
@@ -70,6 +71,23 @@ import { SharedModule } from './shared/shared.module';
 						url: configService.redisUri,
 					},
 				};
+			},
+			inject: [ApiConfigService],
+		}),
+
+		ServeStaticModule.forRootAsync({
+			imports: [SharedModule],
+			useFactory: (configService: ApiConfigService) => {
+				const storagePath =
+					configService.serverStorageFolderConfig.folderName || './uploads';
+
+				return [
+					{
+						rootPath: path.resolve(storagePath),
+						serveRoot: '/uploads',
+						exclude: ['/api/v1*'],
+					},
+				];
 			},
 			inject: [ApiConfigService],
 		}),

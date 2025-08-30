@@ -59,8 +59,8 @@ export class LocalStorageService {
 
 	// eslint-disable-next-line @typescript-eslint/require-await
 	async getFileUrl(key: string): Promise<string> {
-		// Return the relative URL path for serving static files with API version
-		return `/api/v1/files/serve/${key}`;
+		// Return the static file URL using NestJS ServeStaticModule
+		return `/uploads/${key}`;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/require-await
