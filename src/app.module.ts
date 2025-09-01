@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { type Response } from 'express';
 import { ClsModule } from 'nestjs-cls';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import {
@@ -23,6 +24,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { FilesModule } from './modules/files/files.module';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
+import { PublicModule } from './modules/public/public.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
@@ -86,6 +88,19 @@ import { SharedModule } from './shared/shared.module';
 						rootPath: path.resolve(storagePath),
 						serveRoot: '/uploads',
 						exclude: ['/api/v1*'],
+						serveStaticOptions: {
+							setHeaders: (res: Response) => {
+								// For static files, allow the first CORS URL or all origins in development
+								const allowedOrigin = configService.corsUrls[0] || '*';
+								res.set('Access-Control-Allow-Origin', allowedOrigin);
+								res.set('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+								res.set(
+									'Access-Control-Allow-Headers',
+									'Content-Type, Authorization, Accept, Origin, X-Requested-With',
+								);
+								res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+							},
+						},
 					},
 				];
 			},
@@ -100,6 +115,7 @@ import { SharedModule } from './shared/shared.module';
 
 		AuthModule,
 		AdminModule,
+		PublicModule,
 	],
 	providers: [{ provide: APP_GUARD, useClass: ThrottlerBehindProxyGuard }],
 })

@@ -4,7 +4,7 @@ This document tracks the implementation status of all API endpoints and features
 
 ## 📊 **Overall Progress**
 
-- **Completed:** 18 endpoints ✅
+- **Completed:** 20 endpoints ✅
 - **In Progress:** 1 endpoint 🚧
 - **Not Started:** 81+ endpoints ❌
 - **Current Focus:** Admin Authentication, Virtual Tours & Hotspot Management
@@ -41,8 +41,8 @@ This document tracks the implementation status of all API endpoints and features
 
 ### 2.1 Public Tour Access
 
-- ❌ `GET /api/v1/public/tours` - Get Published Tours (Public)
-- ❌ `GET /api/v1/public/tours/{slug}` - Get Tour by Slug (Public)
+- ✅ `GET /api/v1/public/tours` - Get Published Tours (Public)
+- ✅ `GET /api/v1/public/tours/{slug}` - Get Tour by Slug (Public)
 - [ ] List All Amenities: `GET /api/v1/public/amenities`
 - [ ] Filter Tour by Amenities: `GET /api/v1/public/tours?amenities=amenity-id-1,amenity-id-2`
 - [ ] Filter Tour by Room Category: `GET /api/v1/public/tours?room_types=studio,1pn,2pn,3pn,sv`

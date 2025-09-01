@@ -105,6 +105,10 @@ export class ApiConfigService {
 		};
 	}
 
+	get corsUrls(): string[] {
+		return this.getString('CORS_URLS').split(',');
+	}
+
 	get databaseOptions(): IDatabaseOptions {
 		return {
 			host: this.getString('DB_HOST'),

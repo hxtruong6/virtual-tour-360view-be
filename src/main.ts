@@ -57,16 +57,12 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 		new ExpressAdapter(),
 	);
 
+	const configService = app.select(SharedModule).get(ApiConfigService);
+
 	// Enable CORS only in development mode
 	// if (process.env.NODE_ENV !== 'production') {
 	app.enableCors({
-		origin: [
-			'http://localhost:3031',
-			'http://localhost:3030',
-			'https://cms.cwgame.io',
-			'https://world.cwgame.io',
-			'https://cwgame.io',
-		],
+		origin: configService.corsUrls,
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		allowedHeaders: [
 			'Content-Type',
@@ -90,7 +86,6 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 	app.enableVersioning({ type: VersioningType.URI });
 
 	// Setup config service
-	const configService = app.select(SharedModule).get(ApiConfigService);
 	const reflector = app.get(Reflector);
 
 	app.useGlobalFilters(

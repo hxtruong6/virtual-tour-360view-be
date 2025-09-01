@@ -45,17 +45,17 @@ enum TourStatus {
 }
 
 enum TourDifficulty {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
+  BEGINNER // Simple tours with basic navigation and few hotspots
+  INTERMEDIATE // Moderate complexity with multiple scenes and interactive elements
+  ADVANCED // Complex tours with extensive hotspots, custom interactions, and advanced features
 
   @@schema("app")
 }
 
 enum HotspotType {
-  NAVIGATION
-  INFO
-  INTERACTIVE
+  NAVIGATION // Links to other scenes or tours
+  INFO // Displays information, images, or text content
+  INTERACTIVE // Custom interactive elements (forms, videos, etc.)
 
   @@schema("app")
 }
@@ -70,23 +70,23 @@ enum MediaType {
 }
 
 enum MediaStatus {
-  UPLOADING
-  PROCESSING
-  READY
-  FAILED
-  ARCHIVED
+  UPLOADING // File is being uploaded
+  PROCESSING // File is being processed (compression, thumbnail generation, etc.)
+  READY // File is ready for use
+  FAILED // Processing failed
+  ARCHIVED // File is archived and not available
 
   @@schema("app")
 }
 
 enum AnalyticsEventType {
-  TOUR_VIEW
-  SCENE_VIEW
-  HOTSPOT_CLICK
-  TOUR_SHARE
-  TOUR_BOOKMARK
-  SESSION_START
-  SESSION_END
+  TOUR_VIEW // User viewed a tour
+  SCENE_VIEW // User viewed a specific scene
+  HOTSPOT_CLICK // User clicked on a hotspot
+  TOUR_SHARE // User shared a tour
+  TOUR_BOOKMARK // User bookmarked a tour
+  SESSION_START // User session started
+  SESSION_END // User session ended
 
   @@schema("app")
 }
@@ -102,8 +102,8 @@ model User {
   avatar    String?
   role      UserRole   @default(VIEWER)
   status    UserStatus @default(PENDING_VERIFICATION)
-  language  String     @default("en")
-  timezone  String     @default("UTC")
+  language  String     @default("en") // User's preferred language for UI
+  timezone  String     @default("UTC") // User's timezone for date/time display
 
   // Authentication
   hashedPassword         String?   @map("hashed_password")
@@ -115,7 +115,7 @@ model User {
   // Audit fields
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
+  deletedAt DateTime? @map("deleted_at") // Soft delete timestamp
 
   // Relationships
   createdTours       VirtualTour[]    @relation("TourCreator")
@@ -139,45 +139,45 @@ model VirtualTour {
   id           String          @id @default(cuid())
   title        String
   description  String?
-  location     String?
-  slug         String          @unique
+  location     String? // Physical location of the tour (e.g., "Downtown Office Building")
+  slug         String          @unique // URL-friendly identifier
   status       TourStatus      @default(DRAFT)
-  difficulty   TourDifficulty? @default(BEGINNER)
-  category     String?
-  tags         String[]
-  thumbnailUrl String?         @map("thumbnail_url")
+  difficulty   TourDifficulty? @default(BEGINNER) // Complexity level of the tour experience
+  category     String? // Tour category (e.g., "Real Estate", "Museum", "Hotel")
+  tags         String[] // Searchable tags for tour discovery
+  thumbnailUrl String?         @map("thumbnail_url") // Preview image for the tour
 
   // SEO and metadata
-  metaTitle       String?  @map("meta_title")
-  metaDescription String?  @map("meta_description")
-  metaKeywords    String[] @map("meta_keywords")
+  metaTitle       String?  @map("meta_title") // SEO title for search engines
+  metaDescription String?  @map("meta_description") // SEO description for search engines
+  metaKeywords    String[] @map("meta_keywords") // SEO keywords for search engines
 
   // Tour settings
-  allowPublicAccess Boolean @default(true) @map("allow_public_access")
-  allowEmbedding    Boolean @default(true) @map("allow_embedding")
-  autoplayEnabled   Boolean @default(false) @map("autoplay_enabled")
-  autoplaySpeed     Int?    @default(2) @map("autoplay_speed") // seconds per rotation
+  allowPublicAccess Boolean @default(true) @map("allow_public_access") // Whether tour is publicly accessible
+  allowEmbedding    Boolean @default(true) @map("allow_embedding") // Whether tour can be embedded on other sites
+  autoplayEnabled   Boolean @default(false) @map("autoplay_enabled") // Auto-rotate panorama on load
+  autoplaySpeed     Int?    @default(2) @map("autoplay_speed") // Rotation speed in seconds per full rotation
 
   // Statistics
-  viewCount     Int    @default(0) @map("view_count")
-  shareCount    Int    @default(0) @map("share_count")
-  bookmarkCount Int    @default(0) @map("bookmark_count")
-  averageRating Float? @default(0) @map("average_rating")
-  totalRatings  Int    @default(0) @map("total_ratings")
+  viewCount     Int    @default(0) @map("view_count") // Total number of tour views
+  shareCount    Int    @default(0) @map("share_count") // Total number of shares
+  bookmarkCount Int    @default(0) @map("bookmark_count") // Total number of bookmarks
+  averageRating Float? @default(0) @map("average_rating") // Average user rating (1-5 stars)
+  totalRatings  Int    @default(0) @map("total_ratings") // Total number of ratings
 
   // Computed metadata
-  totalScenes       Int  @default(0) @map("total_scenes")
-  totalHotspots     Int  @default(0) @map("total_hotspots")
-  estimatedDuration Int? @map("estimated_duration") // in minutes
+  totalScenes       Int  @default(0) @map("total_scenes") // Number of scenes in the tour
+  totalHotspots     Int  @default(0) @map("total_hotspots") // Total number of hotspots across all scenes
+  estimatedDuration Int? @map("estimated_duration") // Estimated time to complete tour (in minutes)
 
   // Apartment metadata
-  apartmentMetadata Json? @map("apartment_metadata") // Apartment type info and specifications
+  apartmentMetadata Json? @map("apartment_metadata") // Flexible JSON for apartment-specific data (floor plan, specs, etc.)
 
   // Audit fields
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
-  publishedAt DateTime? @map("published_at")
-  deletedAt   DateTime? @map("deleted_at")
+  publishedAt DateTime? @map("published_at") // When tour was first published
+  deletedAt   DateTime? @map("deleted_at") // Soft delete timestamp
 
   // Foreign keys
   createdById String? @map("created_by_id")
@@ -209,18 +209,18 @@ model Scene {
   id           String  @id @default(cuid())
   title        String
   description  String?
-  order        Int
-  panoramaUrl  String  @map("panorama_url")
-  thumbnailUrl String? @map("thumbnail_url")
+  order        Int // Display order within the tour
+  panoramaUrl  String  @map("panorama_url") // 360-degree panorama image URL
+  thumbnailUrl String? @map("thumbnail_url") // Preview image for the scene
 
   // Scene positioning (for map integration)
-  mapPositionX Float? @map("map_position_x")
-  mapPositionY Float? @map("map_position_y")
+  mapPositionX Float? @map("map_position_x") // X coordinate on 2D map
+  mapPositionY Float? @map("map_position_y") // Y coordinate on 2D map
 
   // Scene settings
-  initialViewAngle Float? @default(0) @map("initial_view_angle") // degrees
-  maxZoom          Float? @default(3) @map("max_zoom")
-  minZoom          Float? @default(0.5) @map("min_zoom")
+  initialViewAngle Float? @default(0) @map("initial_view_angle") // Starting view angle in degrees
+  maxZoom          Float? @default(3) @map("max_zoom") // Maximum zoom level allowed
+  minZoom          Float? @default(0.5) @map("min_zoom") // Minimum zoom level allowed
 
   // Audit fields
   createdAt DateTime  @default(now()) @map("created_at")
@@ -251,25 +251,25 @@ model Hotspot {
   title       String
   description String?
 
-  // 3D positioning
-  positionX Float @map("position_x")
-  positionY Float @map("position_y")
-  positionZ Float @map("position_z")
+  // 3D positioning within the panorama
+  positionX Float @map("position_x") // X coordinate in 3D space
+  positionY Float @map("position_y") // Y coordinate in 3D space
+  positionZ Float @map("position_z") // Z coordinate in 3D space
 
   // Visual settings
-  iconUrl   String? @map("icon_url")
-  iconColor String? @default("#ffffff") @map("icon_color")
-  iconSize  Float?  @default(1.0) @map("icon_size")
+  iconUrl   String? @map("icon_url") // Custom icon image URL
+  iconColor String? @default("#ffffff") @map("icon_color") // Icon color (hex)
+  iconSize  Float?  @default(1.0) @map("icon_size") // Icon scale factor
 
   // Content for info hotspots
-  content Json? // Flexible content structure
+  content Json? // Flexible JSON structure for rich content (text, images, videos, etc.)
 
   // Navigation settings
-  targetSceneId String? @map("target_scene_id")
+  targetSceneId String? @map("target_scene_id") // Scene to navigate to (for navigation hotspots)
 
   // Animation settings
-  animationType  String? @default("pulse") @map("animation_type")
-  animationSpeed Float?  @default(1.0) @map("animation_speed")
+  animationType  String? @default("pulse") @map("animation_type") // Animation effect (pulse, bounce, etc.)
+  animationSpeed Float?  @default(1.0) @map("animation_speed") // Animation speed multiplier
 
   // Audit fields
   createdAt DateTime  @default(now()) @map("created_at")
@@ -297,32 +297,32 @@ model Hotspot {
 
 model MediaFile {
   id           String      @id @default(cuid())
-  originalName String      @map("original_name")
-  fileName     String      @unique @map("file_name")
-  filePath     String      @map("file_path")
-  fileSize     Int         @map("file_size")
-  mimeType     String      @map("mime_type")
+  originalName String      @map("original_name") // Original filename from upload
+  fileName     String      @unique @map("file_name") // Generated unique filename
+  filePath     String      @map("file_path") // Storage path
+  fileSize     Int         @map("file_size") // File size in bytes
+  mimeType     String      @map("mime_type") // MIME type
   mediaType    MediaType   @map("media_type")
   status       MediaStatus @default(UPLOADING)
 
   // Image/Video specific
-  width    Int?
-  height   Int?
-  duration Float? // for videos/audio in seconds
+  width    Int? // Image/video width in pixels
+  height   Int? // Image/video height in pixels
+  duration Float? // Video/audio duration in seconds
 
   // Processing metadata
-  processingLog  String? @map("processing_log")
-  thumbnailPath  String? @map("thumbnail_path")
-  compressedPath String? @map("compressed_path")
+  processingLog  String? @map("processing_log") // Processing status and error messages
+  thumbnailPath  String? @map("thumbnail_path") // Generated thumbnail path
+  compressedPath String? @map("compressed_path") // Compressed version path
 
   // Storage metadata
-  storageProvider String? @default("local") @map("storage_provider")
-  externalUrl     String? @map("external_url")
+  storageProvider String? @default("local") @map("storage_provider") // Storage service (local, S3, etc.)
+  externalUrl     String? @map("external_url") // External CDN URL if applicable
 
   // Gallery metadata
-  galleryCategory    String? @map("gallery_category") // 'aerial-views', 'daylight-views', etc.
-  gallerySubcategory String? @map("gallery_subcategory")
-  displayOrder       Int?    @default(0) @map("display_order")
+  galleryCategory    String? @map("gallery_category") // Gallery category (aerial-views, daylight-views, etc.)
+  gallerySubcategory String? @map("gallery_subcategory") // Subcategory within gallery
+  displayOrder       Int?    @default(0) @map("display_order") // Order in gallery display
 
   // Audit fields
   createdAt DateTime  @default(now()) @map("created_at")
@@ -351,8 +351,8 @@ model SceneMedia {
   id          String @id @default(cuid())
   sceneId     String @map("scene_id")
   mediaFileId String @map("media_file_id")
-  mediaType   String @map("media_type") // 'panorama', 'thumbnail', 'background_audio'
-  order       Int?   @default(0)
+  mediaType   String @map("media_type") // Type of media for this scene (panorama, thumbnail, background_audio)
+  order       Int?   @default(0) // Display order for multiple media of same type
 
   scene     Scene     @relation(fields: [sceneId], references: [id], onDelete: Cascade)
   mediaFile MediaFile @relation(fields: [mediaFileId], references: [id], onDelete: Cascade)
@@ -368,8 +368,8 @@ model HotspotMedia {
   id          String @id @default(cuid())
   hotspotId   String @map("hotspot_id")
   mediaFileId String @map("media_file_id")
-  mediaType   String @map("media_type") // 'icon', 'content_image', 'content_video'
-  order       Int?   @default(0)
+  mediaType   String @map("media_type") // Type of media for this hotspot (icon, content_image, content_video)
+  order       Int?   @default(0) // Display order for multiple media of same type
 
   hotspot   Hotspot   @relation(fields: [hotspotId], references: [id], onDelete: Cascade)
   mediaFile MediaFile @relation(fields: [mediaFileId], references: [id], onDelete: Cascade)
@@ -386,7 +386,7 @@ model HotspotMedia {
 model TourTranslation {
   id              String  @id @default(cuid())
   tourId          String  @map("tour_id")
-  language        String
+  language        String // Language code (e.g., "en", "es", "fr")
   title           String
   description     String?
   metaTitle       String? @map("meta_title")
@@ -404,7 +404,7 @@ model TourTranslation {
 model SceneTranslation {
   id          String  @id @default(cuid())
   sceneId     String  @map("scene_id")
-  language    String
+  language    String // Language code (e.g., "en", "es", "fr")
   title       String
   description String?
 
@@ -420,10 +420,10 @@ model SceneTranslation {
 model HotspotTranslation {
   id          String  @id @default(cuid())
   hotspotId   String  @map("hotspot_id")
-  language    String
+  language    String // Language code (e.g., "en", "es", "fr")
   title       String
   description String?
-  content     Json?
+  content     Json? // Translated content for interactive hotspots
 
   hotspot Hotspot @relation(fields: [hotspotId], references: [id], onDelete: Cascade)
 
@@ -438,19 +438,19 @@ model HotspotTranslation {
 
 model UserSession {
   id           String  @id @default(cuid())
-  sessionToken String  @unique @map("session_token")
-  userId       String? @map("user_id")
+  sessionToken String  @unique @map("session_token") // Unique session identifier
+  userId       String? @map("user_id") // Optional - anonymous sessions allowed
   ipAddress    String? @map("ip_address")
   userAgent    String? @map("user_agent")
-  deviceType   String? @map("device_type") // 'desktop', 'mobile', 'tablet'
-  browser      String?
-  os           String?
-  country      String?
+  deviceType   String? @map("device_type") // Device category (desktop, mobile, tablet)
+  browser      String? // Browser name and version
+  os           String? // Operating system
+  country      String? // Geographic location
   city         String?
 
   startedAt      DateTime  @default(now()) @map("started_at")
-  endedAt        DateTime? @map("ended_at")
-  lastActivityAt DateTime  @default(now()) @map("last_activity_at")
+  endedAt        DateTime? @map("ended_at") // Session end time (null if active)
+  lastActivityAt DateTime  @default(now()) @map("last_activity_at") // Last user interaction
 
   user            User?            @relation(fields: [userId], references: [id])
   analyticsEvents AnalyticsEvent[]
@@ -472,8 +472,8 @@ model AnalyticsEvent {
   hotspotId String?            @map("hotspot_id")
 
   // Event metadata
-  eventData Json?    @map("event_data")
-  duration  Float? // in seconds
+  eventData Json?    @map("event_data") // Additional event-specific data
+  duration  Float? // Event duration in seconds (for view events)
   timestamp DateTime @default(now())
 
   // Geographic data
@@ -509,7 +509,7 @@ model TourBookmark {
   user User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   tour VirtualTour @relation(fields: [tourId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, tourId])
+  @@unique([userId, tourId]) // One bookmark per user per tour
   @@index([userId])
   @@index([tourId])
   @@map("tour_bookmarks")
@@ -520,15 +520,15 @@ model TourRating {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
   tourId    String   @map("tour_id")
-  rating    Int // 1-5 stars
-  review    String?
+  rating    Int // User rating (1-5 stars)
+  review    String? // Optional text review
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   user User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   tour VirtualTour @relation(fields: [tourId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, tourId])
+  @@unique([userId, tourId]) // One rating per user per tour
   @@index([userId])
   @@index([tourId])
   @@index([rating])
@@ -540,24 +540,24 @@ model TourRating {
 
 model ApiKey {
   id      String @id @default(cuid())
-  name    String
-  keyHash String @unique @map("key_hash")
+  name    String // Human-readable name for the API key
+  keyHash String @unique @map("key_hash") // Hashed API key for security
   userId  String @map("user_id")
 
   // Permissions
-  allowRead      Boolean @default(true) @map("allow_read")
-  allowWrite     Boolean @default(false) @map("allow_write")
-  allowAnalytics Boolean @default(false) @map("allow_analytics")
+  allowRead      Boolean @default(true) @map("allow_read") // Can read tour data
+  allowWrite     Boolean @default(false) @map("allow_write") // Can create/update tours
+  allowAnalytics Boolean @default(false) @map("allow_analytics") // Can access analytics data
 
-  // Limits
-  requestsPerDay Int?     @default(1000) @map("requests_per_day")
-  requestsCount  Int      @default(0) @map("requests_count")
-  lastResetAt    DateTime @default(now()) @map("last_reset_at")
+  // Rate limiting
+  requestsPerDay Int?     @default(1000) @map("requests_per_day") // Daily request limit
+  requestsCount  Int      @default(0) @map("requests_count") // Current day's request count
+  lastResetAt    DateTime @default(now()) @map("last_reset_at") // Last time request count was reset
 
   // Status
-  isActive   Boolean   @default(true) @map("is_active")
-  expiresAt  DateTime? @map("expires_at")
-  lastUsedAt DateTime? @map("last_used_at")
+  isActive   Boolean   @default(true) @map("is_active") // Whether key is active
+  expiresAt  DateTime? @map("expires_at") // Key expiration date
+  lastUsedAt DateTime? @map("last_used_at") // Last time key was used
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -574,19 +574,19 @@ model ApiKey {
 model TourEmbed {
   id         String  @id @default(cuid())
   tourId     String  @map("tour_id")
-  embedToken String  @unique @map("embed_token")
-  domain     String? // Allowed domain for embedding
+  embedToken String  @unique @map("embed_token") // Unique token for embedding
+  domain     String? // Allowed domain for embedding (security)
 
   // Embed settings
-  width        String? @default("100%")
-  height       String? @default("500px")
-  showControls Boolean @default(true) @map("show_controls")
-  showBranding Boolean @default(true) @map("show_branding")
-  autoplay     Boolean @default(false)
+  width        String? @default("100%") // Embed width (CSS value)
+  height       String? @default("500px") // Embed height (CSS value)
+  showControls Boolean @default(true) @map("show_controls") // Show tour controls
+  showBranding Boolean @default(true) @map("show_branding") // Show platform branding
+  autoplay     Boolean @default(false) // Auto-start tour
 
   // Statistics
-  embedViews   Int       @default(0) @map("embed_views")
-  lastAccessAt DateTime? @map("last_access_at")
+  embedViews   Int       @default(0) @map("embed_views") // Number of views via embed
+  lastAccessAt DateTime? @map("last_access_at") // Last time embed was accessed
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -606,11 +606,11 @@ model Amenity {
   id           String  @id @default(cuid())
   name         String
   description  String?
-  category     String // 'internal' | 'external'
-  iconName     String? @map("icon_name") // Icon identifier (e.g., 'coffee', 'waves')
-  imageUrl     String? @map("image_url")
+  category     String // Amenity category (internal, external, building, neighborhood)
+  iconName     String? @map("icon_name") // Icon identifier for UI display
+  imageUrl     String? @map("image_url") // Amenity image URL
   isActive     Boolean @default(true) @map("is_active")
-  displayOrder Int     @default(0) @map("display_order")
+  displayOrder Int     @default(0) @map("display_order") // Order in amenity list
 
   // Audit fields
   createdAt DateTime  @default(now()) @map("created_at")
@@ -631,7 +631,7 @@ model TourAmenity {
   id         String  @id @default(cuid())
   tourId     String  @map("tour_id")
   amenityId  String  @map("amenity_id")
-  isFeatured Boolean @default(false) @map("is_featured")
+  isFeatured Boolean @default(false) @map("is_featured") // Whether to highlight this amenity
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -639,7 +639,7 @@ model TourAmenity {
   tour    VirtualTour @relation(fields: [tourId], references: [id], onDelete: Cascade)
   amenity Amenity     @relation(fields: [amenityId], references: [id], onDelete: Cascade)
 
-  @@unique([tourId, amenityId])
+  @@unique([tourId, amenityId]) // One amenity per tour
   @@index([tourId])
   @@index([amenityId])
   @@map("tour_amenities")
